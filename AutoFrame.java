@@ -814,7 +814,7 @@ public class AutoFrame extends JFrame {
     }
 //--------------------------------------------------------------------------------------------
     public void UnosAtesta() {
-		JInternalFrame pred = new aVozila();
+		JInternalFrame pred = new aMerniAtesti();
 			desktop.add(pred, "");
 		try { 
 			pred.setVisible(true);
