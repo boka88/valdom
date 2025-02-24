@@ -1,0 +1,1208 @@
+//program za unos sifarnika polaznika
+import java.io.*;
+import java.sql.*;
+import java.sql.ResultSet.*;
+import java.awt.*;
+import java.awt.event.*;
+import javax.swing.*;
+import javax.swing.Action.*;
+import javax.swing.border.*;
+import javax.swing.plaf.metal.*;
+import javax.swing.event.*;
+import javax.swing.text.*;
+import java.lang.*;
+import javax.swing.table.*;
+import java.util.*;
+import java.util.Set.*;
+import java.text.*;
+import javax.swing.KeyStroke.*;
+
+
+public class aVozila extends JInternalFrame implements InternalFrameListener
+			{
+	private QTM2 qtbl;
+   	private JTable jtbl;
+	private Vector totalrows;
+	private JScrollPane jspane;
+	private Vector podaci = new Vector();
+	private Vector spodaci = new Vector();
+	private boolean izmena = false;
+	private String kojiJMBG,kojiRB,date;
+	private MaskFormatter fmt = null;
+	private String pPre,nazivPre;
+	private JButton novi,unesi,izmeni;
+	private ConnMySQL dbconn;
+	private Connection connection = null;
+    public static JFormattedTextField t[],mmoj,displej,imakuku;
+   	private JLabel  l[];
+   	int n_fields;
+//------------------------------------------------------------------------------------------------------------------
+    public aVozila() {
+		super("", true, true, true, true);
+        setTitle("\u0160ifarnik vozila");
+		setMaximizable(false);
+		setResizable(false);
+        setDefaultCloseOperation(WindowConstants.HIDE_ON_CLOSE);
+	    addInternalFrameListener(this);
+
+		JPanel main = new JPanel();
+		main.setLayout( new BorderLayout() );
+
+		uzmiKonekciju();
+
+		JFormattedTextField tft = new JFormattedTextField(new SimpleDateFormat("dd/MM/yyyy"));
+		tft.setValue(new java.util.Date());
+		date=tft.getText();
+
+		buildTable();
+		//main.add(buildNaslov(), BorderLayout.NORTH);
+		main.add(buildPanel(), BorderLayout.CENTER);
+		getContentPane().add(main);
+		pack();
+		setSize(900,550);
+		t[0].requestFocus();
+		centerDialog();
+		UIManager.addPropertyChangeListener(new UISwitchListener(main));
+
+    }
+//------------------------------------------------------------------------------------------------------------------
+    public void internalFrameClosing(InternalFrameEvent e) {}
+    public void internalFrameClosed(InternalFrameEvent e) {}
+    public void internalFrameOpened(InternalFrameEvent e) {}
+    public void internalFrameIconified(InternalFrameEvent e) {}
+    public void internalFrameDeiconified(InternalFrameEvent e) {}
+    public void internalFrameActivated(InternalFrameEvent e) {}
+    public void internalFrameDeactivated(InternalFrameEvent e) {}
+	protected void fireInternalFrameEvent(int id){
+		if (id == InternalFrameEvent.INTERNAL_FRAME_CLOSING ) {
+			try {connection.close(); } 
+			catch (Exception f) {
+				JOptionPane.showMessageDialog(this, "Ne mo\u017ee se zatvoriti konekcija");
+			}
+		} 
+    }
+//------------------------------------------------------------------------------------------------------------------
+    public JPanel buildNaslov() {
+		JPanel naslov = new JPanel();
+		naslov.setLayout( new FlowLayout() );
+		naslov.setBorder( new TitledBorder("") );
+
+		displej = new JFormattedTextField(); 
+		displej.setColumns(30);
+		displej.setEditable(false);
+		displej.setFocusable(false);
+		displej.setFont(new Font("Arial",Font.BOLD,12));
+		displej.setBackground(Color.blue);
+		displej.setForeground(Color.white);
+
+		naslov.add(displej);
+		return naslov;
+	}
+//------------------------------------------------------------------------------------------------------------------
+    public JPanel buildPanel() {
+		JPanel p = new JPanel();
+		p.setLayout( null );
+		p.setBorder( new TitledBorder("Unos") );
+
+		int prviLX,prviTX,drugiLX,drugiTX,treciLX,treciTX,cetvrtiLX,cetvrtiTX,visina,razmakY;
+		int sirinaL,txt,aa,btnY,btnX,btnsirina,btnrazmak,sirinaT;
+		aa = 25;						//rastojanje od gornje ivice panela
+		sirinaL = 120;
+		sirinaT = 150;					//sirina txt
+		visina = 20;					//visina komponente
+		prviLX = 10;					//X-pozicija za prvi red labela
+		prviTX = prviLX + sirinaL;		//X-pozicija za prvi red text-box
+		drugiLX = prviTX + 200;
+		drugiTX = drugiLX + sirinaL;
+
+		treciLX = drugiTX + 150;	
+		treciTX = treciLX + sirinaL;
+		//cetvrtiLX = 590;
+		//cetvrtiTX = cetvrtiLX + sirinaL;
+		razmakY = 3;					// razmak izmedju komponenti po visini
+		txt = 10;						// vrednost jedinicnog razmaka u txt - polju
+		btnY = 6*(visina + razmakY) + 100;
+		btnX = 50;
+		btnsirina = 80;
+		btnrazmak = 5;
+
+		int i;
+        n_fields = 10; 
+        t = new JFormattedTextField[n_fields]; 
+        l = new JLabel[n_fields]; 
+		
+		String fmm;
+		fmm = "******************************";
+        l[0] = new JLabel("Broj \u0161asije :");
+			l[0].setBounds(prviLX,aa,sirinaL,visina);
+		l[0].setFont(new Font("Arial",Font.PLAIN,12));
+        t[0] = new JFormattedTextField(createFormatter(fmm,3));
+		t[0].setFont(new Font("Arial",Font.PLAIN,12));
+		t[0].setHorizontalAlignment(JTextField.LEADING);
+			t[0].setBounds(prviTX,aa,sirinaT,visina);
+		t[0].setSelectionStart(0);
+		t[0].setSelectionEnd(1);
+        t[0].getInputMap().put(KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0),"check");
+        t[0].getActionMap().put("check", new AbstractAction() {
+            public void actionPerformed(ActionEvent e) {Akcija(t[0]);}});
+        t[0].getInputMap().put(KeyStroke.getKeyStroke(KeyEvent.VK_F9, 0),"check1");
+        t[0].getActionMap().put("check1", new AbstractAction() {
+            public void actionPerformed(ActionEvent e) {prikaziKorisnike();}});
+        t[0].getInputMap().put(KeyStroke.getKeyStroke(KeyEvent.VK_F10, 0),"check2");
+        t[0].getActionMap().put("check2", new AbstractAction() {
+            public void actionPerformed(ActionEvent e) {prikaziPravna();}});
+
+		fmm = "***************";
+		l[1] = new JLabel("Registarski broj :");
+			l[1].setBounds(prviLX,aa + visina + razmakY,sirinaL,visina);
+		l[1].setFont(new Font("Arial",Font.PLAIN,12));
+        t[1] = new JFormattedTextField(createFormatter(fmm,3));
+		t[1].setFont(new Font("Arial",Font.PLAIN,12));
+		t[1].addFocusListener(new FL());
+			t[1].setBounds(prviTX,aa + visina + razmakY,sirinaT,visina);
+        t[1].getInputMap().put(KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0),"check");
+        t[1].getActionMap().put("check", new AbstractAction() {
+            public void actionPerformed(ActionEvent e) {Akcija(t[1]);}});
+
+		fmm = "*****************************";
+        l[2] = new JLabel("Broj mesta :");
+ 			l[2].setBounds(prviLX,aa + 2*(visina + razmakY),sirinaL,visina);
+		l[2].setFont(new Font("Arial",Font.PLAIN,12));
+		t[2] = new JFormattedTextField(createFormatter(fmm,3));
+		t[2].setFont(new Font("Arial",Font.PLAIN,12));
+			t[2].setBounds(prviTX,aa + 2*(visina + razmakY),sirinaT,visina);
+		t[2].setSelectionStart(0);
+		t[2].setSelectionEnd(1);
+        t[2].getInputMap().put(KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0),"check");
+        t[2].getActionMap().put("check", new AbstractAction() {
+            public void actionPerformed(ActionEvent e) {Akcija(t[2]);}});
+
+		fmm = "********************";
+        l[3] = new JLabel("Broj motora:");
+			l[3].setBounds(prviLX,aa + 3*(visina + razmakY),sirinaL,visina);
+		l[3].setFont(new Font("Arial",Font.PLAIN,12));
+        t[3] = new JFormattedTextField(createFormatter(fmm,3));
+		t[3].setFont(new Font("Arial",Font.PLAIN,12));
+			t[3].setBounds(prviTX,aa + 3*(visina + razmakY),sirinaT,visina);
+        t[3].getInputMap().put(KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0),"check");
+        t[3].getActionMap().put("check", new AbstractAction() {
+            public void actionPerformed(ActionEvent e) {Akcija(t[3]);}});
+
+		fmm = "********************";
+		l[4] = new JLabel("Vrsta vozila :");
+			l[4].setBounds(prviLX,aa + 4*(visina + razmakY),sirinaL,visina);
+		l[4].setFont(new Font("Arial",Font.PLAIN,12));
+        t[4] = new JFormattedTextField(createFormatter(fmm,3));
+		t[4].setFont(new Font("Arial",Font.PLAIN,12));
+			t[4].setBounds(prviTX,aa + 4*(visina + razmakY),sirinaT,visina);
+        t[4].getInputMap().put(KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0),"check");
+        t[4].getActionMap().put("check", new AbstractAction() {
+            public void actionPerformed(ActionEvent e) {Akcija(t[4]);}});
+
+		l[5] = new JLabel("Marka :");
+			l[5].setBounds(prviLX,aa + 5*(visina + razmakY),sirinaL,visina);
+		l[5].setFont(new Font("Arial",Font.PLAIN,12));
+        t[5] = new JFormattedTextField(createFormatter(fmm,3));
+		t[5].setFont(new Font("Arial",Font.PLAIN,12));
+		t[5].setColumns(14);
+			t[5].setBounds(prviTX,aa + 5*(visina + razmakY),sirinaT,visina);
+        t[5].getInputMap().put(KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0),"check");
+        t[5].getActionMap().put("check", new AbstractAction() {
+            public void actionPerformed(ActionEvent e) {Akcija(t[5]);}});
+
+        l[6] = new JLabel("Tip :");
+			l[6].setBounds(prviLX,aa + 6*(visina + razmakY),sirinaL,visina);
+		l[6].setFont(new Font("Arial",Font.PLAIN,12));
+        t[6] = new JFormattedTextField(createFormatter(fmm,3));
+		t[6].setFont(new Font("Arial",Font.PLAIN,12));
+			t[6].setBounds(prviTX,aa + 6*(visina + razmakY),sirinaT,visina);
+		t[6].getInputMap().put(KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0),"check");
+        t[6].getActionMap().put("check", new AbstractAction() {
+            public void actionPerformed(ActionEvent e) {Akcija(t[6]);}});
+
+		fmm = "****";
+        l[7] = new JLabel("God.proizvod. :");
+			l[7].setBounds(prviLX,aa + 7*(visina + razmakY),sirinaL,visina);
+		l[7].setFont(new Font("Arial",Font.PLAIN,12));
+        t[7] = new JFormattedTextField(createFormatter(fmm,1));
+		t[7].setFont(new Font("Arial",Font.PLAIN,12));
+			t[7].setBounds(prviTX,aa + 7*(visina + razmakY),sirinaT,visina);
+        t[7].getInputMap().put(KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0),"check");
+        t[7].getActionMap().put("check", new AbstractAction() {
+            public void actionPerformed(ActionEvent e) {Akcija(t[7]);}});
+		//--------------------------------------------------
+
+		fmm = "**********";
+		l[8] = new JLabel("Kilometra\u017ea :");
+			l[8].setBounds(drugiLX,aa,sirinaL,visina);
+		l[8].setFont(new Font("Arial",Font.PLAIN,12));
+        t[8] = new JFormattedTextField(createFormatter(fmm,3));
+		t[8].setFont(new Font("Arial",Font.PLAIN,12));
+		t[8].setColumns(20);
+			t[8].setBounds(drugiTX,aa,120,visina);
+        t[8].getInputMap().put(KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0),"check");
+        t[8].getActionMap().put("check", new AbstractAction() {
+            public void actionPerformed(ActionEvent e) {Akcija(t[8]);}});
+ 	
+ 		fmm = "***********";
+		l[9] = new JLabel("Snaga motora kW:");
+			l[9].setBounds(drugiLX,aa + visina + razmakY,sirinaL,visina);
+		l[9].setFont(new Font("Arial",Font.PLAIN,12));
+        t[9] = new JFormattedTextField(createFormatter(fmm,2));
+		t[9].setFont(new Font("Arial",Font.PLAIN,12));
+			t[9].setBounds(drugiTX,aa + visina + razmakY,120,visina);
+        t[9].getInputMap().put(KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0),"check");
+        t[9].getActionMap().put("check", new AbstractAction() {
+            public void actionPerformed(ActionEvent e) {Akcija(t[9]);}});
+
+ 		/*fmm = "**********************";
+		l[10] = new JLabel("Boja karoserije :");
+			l[10].setBounds(drugiLX,aa + 2*(visina + razmakY),sirinaL,visina);
+		l[10].setFont(new Font("Arial",Font.PLAIN,12));
+        t[10] = new JFormattedTextField(createFormatter(fmm,3));
+		t[10].setFont(new Font("Arial",Font.PLAIN,12));
+			t[10].setBounds(drugiTX,aa + 2*(visina + razmakY),120,visina);
+        t[10].getInputMap().put(KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0),"check");
+        t[10].getActionMap().put("check", new AbstractAction() {
+            public void actionPerformed(ActionEvent e) {Akcija(t[10]);}});
+
+ 		fmm = "*********************************";
+		l[11] = new JLabel("Oblik-namena kar.:");
+			l[11].setBounds(drugiLX,aa + 3*(visina + razmakY),sirinaL,visina);
+		l[11].setFont(new Font("Arial",Font.PLAIN,12));
+        t[11] = new JFormattedTextField(createFormatter(fmm,3));
+		t[11].setFont(new Font("Arial",Font.PLAIN,12));
+			t[11].setBounds(drugiTX,aa + 3*(visina + razmakY),120,visina);
+        t[11].getInputMap().put(KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0),"check");
+        t[11].getActionMap().put("check", new AbstractAction() {
+            public void actionPerformed(ActionEvent e) {Akcija(t[11]);}});
+
+		fmm = "##/##/####";				
+		l[12] = new JLabel("Registracija od :");
+			l[12].setBounds(drugiLX,aa + 4*(visina + razmakY),sirinaL,visina);
+		l[12].setFont(new Font("Arial",Font.PLAIN,12));
+        t[12] = new JFormattedTextField(createFormatter(fmm,4));
+		t[12].setFont(new Font("Arial",Font.PLAIN,12));
+			t[12].setBounds(drugiTX,aa + 4*(visina + razmakY),120,visina);
+        t[12].getInputMap().put(KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0),"check");
+        t[12].getActionMap().put("check", new AbstractAction() {
+            public void actionPerformed(ActionEvent e) {Akcija(t[12]);}});
+
+ 		fmm = "********************";
+		l[13] = new JLabel("Broj polise :");
+			l[13].setBounds(drugiLX,aa + 5*(visina + razmakY),sirinaL,visina);
+		l[13].setFont(new Font("Arial",Font.PLAIN,12));
+        t[13] = new JFormattedTextField(createFormatter(fmm,3));
+		t[13].setFont(new Font("Arial",Font.PLAIN,12));
+			t[13].setBounds(drugiTX,aa + 5*(visina + razmakY),120,visina);
+        t[13].getInputMap().put(KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0),"check");
+        t[13].getActionMap().put("check", new AbstractAction() {
+            public void actionPerformed(ActionEvent e) {Akcija(t[13]);}});
+
+ 		fmm = "********************";
+		l[14] = new JLabel("Broj zel.kartona :");
+			l[14].setBounds(drugiLX,aa + 6*(visina + razmakY),sirinaL,visina);
+		l[14].setFont(new Font("Arial",Font.PLAIN,12));
+        t[14] = new JFormattedTextField(createFormatter(fmm,3));
+		t[14].setFont(new Font("Arial",Font.PLAIN,12));
+			t[14].setBounds(drugiTX,aa + 6*(visina + razmakY),120,visina);
+        t[14].getInputMap().put(KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0),"check");
+        t[14].getActionMap().put("check", new AbstractAction() {
+            public void actionPerformed(ActionEvent e) {Akcija(t[14]);}});
+
+		fmm = "##/##/####";				
+		l[15] = new JLabel("Tahograf datum :");
+			l[15].setBounds(drugiLX,aa + 7*(visina + razmakY),sirinaL,visina);
+		l[15].setFont(new Font("Arial",Font.PLAIN,12));
+        t[15] = new JFormattedTextField(createFormatter(fmm,4));
+		t[15].setFont(new Font("Arial",Font.PLAIN,12));
+			t[15].setBounds(drugiTX,aa + 7*(visina + razmakY),120,visina);
+        t[15].getInputMap().put(KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0),"check");
+        t[15].getActionMap().put("check", new AbstractAction() {
+            public void actionPerformed(ActionEvent e) {Akcija(t[15]);}});
+
+		l[16] = new JLabel("ADR datum :");
+			l[16].setBounds(treciLX,aa,sirinaL,visina);
+		l[16].setFont(new Font("Arial",Font.PLAIN,12));
+        t[16] = new JFormattedTextField(createFormatter(fmm,4));
+		t[16].setFont(new Font("Arial",Font.PLAIN,12));
+			t[16].setBounds(treciTX,aa,80,visina);
+        t[16].getInputMap().put(KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0),"check");
+        t[16].getActionMap().put("check", new AbstractAction() {
+            public void actionPerformed(ActionEvent e) {Akcija(t[16]);}});
+
+		l[17] = new JLabel("Datum teh.pregl. :");
+		l[17].setBounds(treciLX,aa + visina + razmakY,sirinaL,visina);
+		l[17].setFont(new Font("Arial",Font.PLAIN,12));
+        t[17] = new JFormattedTextField(createFormatter(fmm,4));
+		t[17].setFont(new Font("Arial",Font.PLAIN,12));
+			t[17].setBounds(treciTX,aa + visina + razmakY,80,visina);
+        t[17].getInputMap().put(KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0),"check");
+        t[17].getActionMap().put("check", new AbstractAction() {
+            public void actionPerformed(ActionEvent e) {Akcija(t[17]);}});
+
+		fmm = "****";
+        l[18] = new JLabel("Meseci za teh.pr. :");
+			l[18].setBounds(treciLX,aa + 2*(visina + razmakY),sirinaL,visina);
+		l[18].setFont(new Font("Arial",Font.PLAIN,12));
+        t[18] = new JFormattedTextField(createFormatter(fmm,1));
+		t[18].setFont(new Font("Arial",Font.PLAIN,12));
+			t[18].setBounds(treciTX,aa + 2*(visina + razmakY),80,visina);
+        t[18].getInputMap().put(KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0),"check");
+        t[18].getActionMap().put("check", new AbstractAction() {
+            public void actionPerformed(ActionEvent e) {Akcija(t[18]);}});
+
+		fmm = "*********";
+        l[19] = new JLabel("(km) za zam.ulja:");
+			l[19].setBounds(treciLX,aa + 3*(visina + razmakY),sirinaL,visina);
+		l[19].setFont(new Font("Arial",Font.PLAIN,12));
+        t[19] = new JFormattedTextField(createFormatter(fmm,1));
+		t[19].setFont(new Font("Arial",Font.PLAIN,12));
+			t[19].setBounds(treciTX,aa + 3*(visina + razmakY),80,visina);
+        t[19].getInputMap().put(KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0),"check");
+        t[19].getActionMap().put("check", new AbstractAction() {
+            public void actionPerformed(ActionEvent e) {Akcija(t[19]);}});
+
+		*/
+		unesi = new JButton("Unesi");
+		unesi.setMnemonic('U');
+		unesi.setBounds(btnX + btnsirina + btnrazmak,btnY,btnsirina,20);
+        unesi.getInputMap().put(KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0),"check");
+        unesi.getActionMap().put("check", new AbstractAction() {
+            public void actionPerformed(ActionEvent e) {UnesiPressed();}});
+		unesi.addActionListener(new ActionListener() {
+	               public void actionPerformed(ActionEvent e) {
+				   UnesiPressed(); }});
+
+		novi = new JButton("Novi slog");
+		novi.setMnemonic('N');
+		novi.setBounds(btnX,btnY,btnsirina,20);
+		novi.addActionListener(new ActionListener() {
+	               public void actionPerformed(ActionEvent e) {
+				   NoviPressed(); }});
+
+		izmeni = new JButton("Izmeni");
+		izmeni.setMnemonic('I');
+		izmeni.setBounds(btnX + 2*(btnsirina + btnrazmak),btnY,btnsirina,20);
+        izmeni.getInputMap().put(KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0),"check");
+        izmeni.getActionMap().put("check", new AbstractAction() {
+					public void actionPerformed(ActionEvent e) {UpdateRecord();}});
+		izmeni.addActionListener(new ActionListener() {
+	               public void actionPerformed(ActionEvent e) {
+				   UpdateRecord(); }});
+
+		JButton brisi = new JButton("Bri\u0161i slog");
+		brisi.setMnemonic('B');
+		brisi.setBounds(btnX + 3*(btnsirina + btnrazmak),btnY,btnsirina,20);
+		brisi.addActionListener(new ActionListener() {
+	               public void actionPerformed(ActionEvent e) {
+				   DeleteRecord(); }});
+
+		JButton trazi = new JButton("Tra\u017ei");
+		trazi.setMnemonic('T');
+		trazi.setBounds(btnX + 4*(btnsirina + btnrazmak),btnY,btnsirina,20);
+		trazi.addActionListener(new ActionListener() {
+	               public void actionPerformed(ActionEvent e) {
+				   TraziRecord(); }});
+
+		JButton stampa = new JButton("\u0160tampa");
+		stampa.setMnemonic('P');
+		stampa.setBounds(btnX + 5*(btnsirina + btnrazmak),btnY,btnsirina,20);
+		stampa.addActionListener(new ActionListener() {
+	               public void actionPerformed(ActionEvent e) {
+				   Stampa(); }});
+
+		JButton stampapoj = new JButton("\u0160t.poj.");
+		stampapoj.setMnemonic('O');
+		stampapoj.setBounds(btnX + 6*(btnsirina + btnrazmak),btnY,btnsirina,20);
+		stampapoj.addActionListener(new ActionListener() {
+	               public void actionPerformed(ActionEvent e) {
+				   StampaPoj(); }});
+
+	    for(i=0;i<n_fields;i++){ 
+            p.add(l[i]); 
+            p.add(t[i]); }
+		p.add(unesi);
+		p.add(novi);
+		p.add(izmeni);
+		p.add(brisi);
+		p.add(trazi);
+		p.add(stampa);
+		p.add(stampapoj);
+		p.add(jspane);
+		return p;
+  }
+//------------------------------------------------------------------------------------------------------------------
+protected MaskFormatter createFormatter(String s, int koji) {
+		MaskFormatter formatter = null;
+
+		try {
+			formatter = new MaskFormatter(s);
+				switch (koji)	{
+				case 1:
+					//formater za cele brojeve
+					formatter.setValidCharacters("0123456789 ");
+					break;
+				case 2:
+					//formater za iznose sa decimalama
+					formatter.setValidCharacters("0123456789. ");
+					break;
+				case 3:
+					//za tekstualna polja bez ogranicenja
+					break;
+				case 4:
+					//formater za datume
+					formatter.setValidCharacters("0123456789/- ");
+					break;
+				}
+
+		} catch (java.text.ParseException exc) {
+			System.err.println("formatter is bad: " + exc.getMessage());
+		}
+		return formatter;
+	}
+//------------------------------------------------------------------------------------------------------------------
+    protected void centerDialog() {
+        Dimension screenSize = this.getToolkit().getScreenSize();
+		Dimension size = this.getSize();
+		screenSize.height = screenSize.height/2;
+		screenSize.width = screenSize.width/2;
+		size.height = size.height/2;
+		size.width = size.width/2;
+		//int y = screenSize.height - size.height;
+		//int x = screenSize.width - size.width;
+		int y = 5;
+		int x = 2;
+		this.setLocation(x,y);
+    }
+//------------------------------------------------------------------------------------------------------------------
+    public void NoviPressed() {
+        int i;
+        n_fields = 20; 
+        for(i=0;i<n_fields;i++)
+            t[i].setText("");
+		//t[24].setText(date);
+		izmena = false;
+		//displej.setText("");
+		t[0].requestFocus();
+    }
+//------------------------------------------------------------------------------------------------------------------
+    public void UnesiPressed() {
+		AddRecord();
+    	}
+//------------------------------------------------------------------------------------------------------------------
+    public void Stampa() {
+		jPrintVozila kkl = new jPrintVozila(connection);
+	}
+//------------------------------------------------------------------------------------------------------------------
+    public void StampaPoj() {
+		if (t[0].getText().trim().length() != 0){
+			jPrintVozilaPoj kk2 = new jPrintVozilaPoj(connection,t[0].getText());
+		}else{
+			JOptionPane.showMessageDialog(this, "Prvo popunite podatke");
+			t[0].requestFocus();
+		}
+	}
+//------------------------------------------------------------------------------------------------------------------
+    public void BrisiPressed() {
+        this.setVisible(false);
+    	}
+//------------------------------------------------------------------------------------------------------------------
+    public void quitForm() {
+		// zatvaranje programa-----------------------------
+		try {	connection.close(); } 
+		catch (Exception f) {
+			JOptionPane.showMessageDialog(this, "Ne mo\u017ee se zatvoriti konekcija");
+		}
+        	this.setVisible(false);
+    } 
+//------------------------------------------------------------------------------------------------------------------
+	public void uzmiKonekciju(){
+		ConnMySQL _dbconn = new ConnMySQL();
+		if (_dbconn.getConnection() != null)
+			{connection = _dbconn.getConnection();}
+		else
+			{JOptionPane.showMessageDialog(this, "Konekcija nije otvorena");}
+		return;
+    }
+//--------------------------------------------------------------------------
+   public boolean proveriDatum(String _datum){
+		boolean ispravan = false;
+		SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+		java.util.Date testDate = null;
+		try
+		{
+			testDate = sdf.parse(_datum);
+		}
+		//provera da li je odgovarajuci format datuma
+		catch (ParseException e)
+		{
+			JOptionPane.showMessageDialog(this, "Neispravan format datuma");
+			return false;
+		}
+		//provera da li je datum ispravan
+		if (!sdf.format(testDate).equals(_datum))
+		{
+			JOptionPane.showMessageDialog(this, "Neispravan datum");
+			return false;
+		}else{
+		}
+		return true;
+   }
+ //--------------------------------------------------------------------------
+   private String konvertujDatum(String _datum){
+		String datum,pom;
+		pom = _datum;
+		datum = pom.substring(6,10);
+		datum = datum + "-" + pom.substring(3,5);
+		datum = datum + "-" + pom.substring(0,2);
+	return datum;
+   }
+//--------------------------------------------------------------------------
+   private String konvertujDatumIzPodataka(String _datum){
+		String datum,pom;
+		pom = _datum;
+		datum = pom.substring(8,10);
+		datum = datum + "/" + pom.substring(5,7);
+		datum = datum + "/" + pom.substring(0,4);
+		//JOptionPane.showMessageDialog(this, datum);
+	return datum;
+   }
+//------------------------------------------------------------------------------------------------------------------
+	public void AddRecord() {
+	  Statement statement = null;
+	  String query = "";
+      try {
+         statement = connection.createStatement();
+
+         if ( !t[0].getText().equals( "" ) && !t[1].getText().equals( "" )) {
+			
+			query = "INSERT INTO vozila(brsasije,regbroj,brputnmesta,brmotora,vrstavozila,marka," +
+				"tip,godproizvodnje,kilometraza,snagamotora,bojakaroserije,obliknamena," +
+				"registracija,brojpolise,brzelkartona,tahograf,adr,tehpregled,brojmesteh,kmzamulja)" +
+				" VALUES('" +
+				t[0].getText().trim() + "','" +
+				t[1].getText() + "','" +
+				t[2].getText() + "','" +
+				t[3].getText() + "','" +
+				t[4].getText() + "','" + 
+				t[5].getText() + "','" + 
+				t[6].getText() + "'," + 
+				Integer.parseInt(t[7].getText().trim()) + "," +
+				Double.parseDouble(t[8].getText().trim()) + "," + 
+				Double.parseDouble(t[9].getText().trim()) + ",'" + 
+				t[10].getText().trim() + "','" +
+				t[11].getText() + "','" + 
+				konvertujDatum(t[12].getText().trim()) + "','" + 
+				t[13].getText() + "','" + 
+				t[14].getText() + "','" + 
+				konvertujDatum(t[15].getText().trim()) + "','" + 
+				konvertujDatum(t[16].getText().trim()) + "','" +
+				konvertujDatum(t[17].getText().trim()) + "'," +
+				Integer.parseInt(t[18].getText().trim()) + "," +
+				Integer.parseInt(t[19].getText().trim()) + ")";
+
+			int result = statement.executeUpdate( query );
+
+			if ( result == 1 ){
+				//JOptionPane.showMessageDialog(this, "Slog je unet");
+				String upit = "SELECT * FROM vozila";
+				popuniTabelu(upit);
+				NoviPressed();
+			}     
+			else {
+				JOptionPane.showMessageDialog(this, "Slog nije unet");
+				NoviPressed();
+            }
+         }
+         else 
+		  {JOptionPane.showMessageDialog(this, "Unesi prvo podatke u polja");}
+      }
+      catch ( SQLException sqlex ) {
+		JOptionPane.showMessageDialog(this, "Gre\u0161ka u unosu:"+sqlex);
+		JOptionPane.showMessageDialog(this, "Upitu:"+query);
+      }
+		//.....................................................................................
+		finally{
+			if (statement != null){
+				try{
+					statement.close();
+					statement = null;
+				}catch (Exception e){
+					JOptionPane.showMessageDialog(null, "Nije uspeo da zatvori statement");}}
+		}
+		//.....................................................................................
+  }
+//------------------------------------------------------------------------------------------------------------------
+	public void UpdateRecord() {
+	  Statement statement = null;
+  
+      try {
+         statement = connection.createStatement();
+         if ( !t[0].getText().equals( "" ) && !t[1].getText().equals( "" )) {
+               String query = "UPDATE vozila SET " +
+				"regbroj='" + t[1].getText() + "'" +
+				",brputnmesta='" + t[2].getText() + "'" +
+				",brmotora='" + t[3].getText() + "'" +
+				",vrstavozila='" + t[4].getText() + "'" +
+				",marka='" + t[5].getText() + "'" +
+				",tip='" + t[6].getText() + "'" +
+				",obliknamena='" + t[11].getText() + "'" +
+				",registracija='" + konvertujDatum(t[12].getText().trim()) + "'" +
+				",brojpolise='" + t[13].getText() + "'" +
+				",brzelkartona='" + t[14].getText() + "'" +
+				",tahograf='" + konvertujDatum(t[15].getText().trim()) + "'" +
+				",adr='" + konvertujDatum(t[16].getText().trim()) + "'" +
+				",tehpregled='" + konvertujDatum(t[17].getText().trim()) + "'" +
+				",godproizvodnje=" + Integer.parseInt(t[7].getText().trim()) + 
+				",brojmesteh=" + Integer.parseInt(t[18].getText().trim()) + 
+				",kmzamulja=" + Integer.parseInt(t[19].getText().trim()) + 
+				",kilometraza=" + Double.parseDouble(t[8].getText().trim()) + 
+				",snagamotora=" + Double.parseDouble(t[9].getText().trim())+ 
+				",bojakaroserije='" + t[10].getText().trim() + "'" +
+			   " WHERE brsasije='" + t[0].getText() + "'";
+
+			   int result = statement.executeUpdate( query );
+               if ( result == 1 ){
+					//JOptionPane.showMessageDialog(this, "Slog je izmenjen");
+					String upit = "SELECT * FROM vozila ";
+					popuniTabelu(upit);
+					NoviPressed();
+				}     
+				else {
+					JOptionPane.showMessageDialog(this, "Slog nije izmenjen");
+					NoviPressed();
+				}
+         }
+         else {
+			JOptionPane.showMessageDialog(this, "Unesi prvo podatke u polja JMBG i regbr");
+		 }
+		}
+		catch ( SQLException sqlex ) {
+		JOptionPane.showMessageDialog(this, "Gre\u0161ka u izmeni:"+sqlex);
+      }
+		//.....................................................................................
+		finally{
+			if (statement != null){
+				try{
+					statement.close();
+					statement = null;
+				}catch (Exception e){
+					JOptionPane.showMessageDialog(null, "Nije uspeo da zatvori statement");}}
+		}
+		//.....................................................................................
+  }
+//------------------------------------------------------------------------------------------------------------------
+	public void DeleteRecord() {
+	  Statement statement = null;
+      try {
+         statement = connection.createStatement();
+         if ( !t[0].getText().equals( "" ) && !t[1].getText().equals( "" )) {
+               	String query = "DELETE FROM vozila WHERE brsasije='" + 
+						t[0].getText().trim() + "'";
+
+               	int rs = statement.executeUpdate( query );
+               	if ( rs != 0 ){
+					JOptionPane.showMessageDialog(this, "Slog je izbrisan");
+					String upit = "SELECT * FROM vozila ";
+					popuniTabelu(upit);
+
+					NoviPressed();
+				}     
+            	else {
+            		JOptionPane.showMessageDialog(this, "Slog se ne mo\u017ee izbrisati");
+               		NoviPressed();
+            	}
+         }
+         else {
+			JOptionPane.showMessageDialog(this, "Unesi prvo podatke u polja JMBG i reg.broj");
+		 }
+      }
+      catch ( SQLException sqlex ) {
+		JOptionPane.showMessageDialog(this, "Gre\u0161ka u brisanju:"+sqlex);
+      }
+		//.....................................................................................
+		finally{
+			if (statement != null){
+				try{
+					statement.close();
+					statement = null;
+				}catch (Exception e){
+					JOptionPane.showMessageDialog(null, "Nije uspeo da zatvori statement");}}
+		}
+		//.....................................................................................
+  }
+//------------------------------------------------------------------------------------------------------------------
+	public void FindRecord() {
+	  Statement statement = null;
+ 
+      try {
+         statement = connection.createStatement();
+
+			String query = "SELECT * FROM vozila WHERE brsasije='" + kojiJMBG + "'";
+
+			try {
+		         ResultSet rs = statement.executeQuery( query );
+		         if(rs.next()){
+
+		         	t[0].setText(rs.getString("brsasije"));
+		         	t[1].setText(rs.getString("regbroj"));
+		         	t[2].setText(rs.getString("brputnmesta"));
+		         	t[3].setText(rs.getString("brmotora"));
+		         	t[4].setText(rs.getString("vrstavozila"));
+		         	t[5].setText(rs.getString("marka"));
+		         	t[6].setText(rs.getString("tip"));
+		         	t[7].setText(rs.getString("godproizvodnje"));
+		         	t[8].setText(rs.getString("kilometraza"));
+		         	t[9].setText(rs.getString("snagamotora"));
+		         	t[10].setText(rs.getString("bojakaroserije"));
+		         	t[11].setText(rs.getString("obliknamena"));
+		         	t[12].setText(konvertujDatumIzPodataka(rs.getString("registracija")));
+		         	t[13].setText(rs.getString("brojpolise"));
+		         	t[14].setText(rs.getString("brzelkartona"));
+		         	t[15].setText(konvertujDatumIzPodataka(rs.getString("tahograf")));
+		         	t[16].setText(konvertujDatumIzPodataka(rs.getString("adr")));
+		         	t[17].setText(konvertujDatumIzPodataka(rs.getString("tehpregled")));
+		         	t[18].setText(rs.getString("brojmesteh"));
+		         	t[19].setText(rs.getString("kmzamulja"));
+					izmena = true;
+				}
+					t[1].setSelectionStart(0);
+					t[1].setSelectionEnd(15);
+					t[1].requestFocus();
+		      }
+		      catch ( SQLException sqlex ) {
+		         	JOptionPane.showMessageDialog(this, sqlex);
+		      }
+		 //}     
+         //else {
+         //   JOptionPane.showMessageDialog(this, "Nisu uneti podaci JMBG i Reg.br");
+         //   }
+      }
+      catch ( SQLException sqlex ) {
+		JOptionPane.showMessageDialog(this, "Gre\u0161ka u trazenju podataka:"+sqlex);
+      }
+		//.....................................................................................
+		finally{
+			if (statement != null){
+				try{
+					statement.close();
+					statement = null;
+				}catch (Exception e){
+					JOptionPane.showMessageDialog(null, "Nije uspeo da zatvori statement");}}
+		}
+		//.....................................................................................
+  }
+//------------------------------------------------------------------------------------------------------------------
+	private void TraziRecord(){
+        String result = JOptionPane.showInputDialog(this, "Unesi reg.br.");
+		String upit = "SELECT * FROM vozila WHERE regbroj LIKE '%" + String.valueOf(result) + "%'";
+		popuniTabelu(upit);
+		jtbl.requestFocus();
+  }
+//------------------------------------------------------------------------------------------------------------------
+	public void greskaDuzina(){
+		JOptionPane.showMessageDialog(this, "Prekora\u010dena du\u017eina podatka");
+   }
+//------------------------------------------------------------------------------------------------------------------
+	public void obavestiGresku(){
+		//JOptionPane.showMessageDialog(this, "Mogu se unositi samo brojevi");
+		JOptionPane.showMessageDialog(this, String.valueOf(kojiJMBG));
+   }
+//------------------------------------------------------------------------------------------------------------------
+    public void popuniTabelu(String _sql) {
+		String sqll= new String(_sql);
+	   	qtbl.query(sqll);
+		qtbl.fire();
+	   	TableColumn tcol = jtbl.getColumnModel().getColumn(0);
+	   	tcol.setPreferredWidth(100);
+	   	TableColumn tcol1 = jtbl.getColumnModel().getColumn(1);
+	   	tcol1.setPreferredWidth(120);
+	   	TableColumn tcol2 = jtbl.getColumnModel().getColumn(2);
+	   	tcol2.setPreferredWidth(100);
+	   	TableColumn tcol3 = jtbl.getColumnModel().getColumn(3);
+	   	tcol3.setPreferredWidth(100);
+	   	TableColumn tcol4 = jtbl.getColumnModel().getColumn(4);
+	   	tcol4.setPreferredWidth(100);
+	}
+//------------------------------------------------------------------------------------------------------------------
+    public void buildTable() {
+		JPanel ptbl = new JPanel();
+	   	ptbl.setLayout( new GridLayout(1,1) );
+		ptbl.setBorder( new TitledBorder("Podaci") );
+
+	   	qtbl = new QTM2(connection);
+		String sql;
+		sql = "SELECT * FROM vozila ";
+	   	qtbl.query(sql);
+ 	   	jtbl = new JTable( qtbl );
+		jtbl.setAlignmentX(JTable.RIGHT_ALIGNMENT); 		
+		jtbl.setAutoResizeMode(JTable.AUTO_RESIZE_OFF); 
+		jtbl.addMouseListener(new ML());
+		
+	   	TableColumn tcol = jtbl.getColumnModel().getColumn(0);
+	   	tcol.setPreferredWidth(100);
+	   	TableColumn tcol1 = jtbl.getColumnModel().getColumn(1);
+	   	tcol1.setPreferredWidth(120);
+	   	TableColumn tcol2 = jtbl.getColumnModel().getColumn(2);
+	   	tcol2.setPreferredWidth(100);
+	   	TableColumn tcol3 = jtbl.getColumnModel().getColumn(3);
+	   	tcol3.setPreferredWidth(100);
+	   	TableColumn tcol4 = jtbl.getColumnModel().getColumn(4);
+	   	tcol4.setPreferredWidth(100);
+
+	   	jspane = new JScrollPane( jtbl );
+		jspane.setBounds(50,270,800,190);
+	}
+//------------------------------------------------------------------------------------------------------------------
+    public void prikaziIzTabele() {
+		int kojirec = jtbl.getSelectedRow();
+		kojiJMBG = String.valueOf(podaci.get(kojirec));
+		FindRecord();
+	}
+//-------------------------------------------------------------------------
+   public void proveriKor(){
+		if (t[0].getText().trim().length() == 13)
+		{
+			proveriKorisnika();
+		}
+		else{
+			proveriPravno();
+		}
+   }
+//-------------------------------------------------------------------------
+   public void prikaziKorisnike(){
+	   int t,tri;
+	   t = 1;
+			KorisniciPrik sk = new KorisniciPrik(t);
+			sk.setModal(true);
+			sk.setVisible(true);
+   }
+//-------------------------------------------------------------------------
+   public void prikaziPravna(){
+	   int t;
+	   t = 1;
+			PravnaPrik pk = new PravnaPrik(t);
+			pk.setModal(true);
+			pk.setVisible(true);
+   }
+//------------------------------------------------------------------------------------------------------------------
+	public void Akcija(JFormattedTextField e) {
+		JFormattedTextField source;
+		source = e;
+
+				if (source == t[0]){
+					if (t[0].getText().trim().length() == 0)
+					{	JOptionPane.showMessageDialog(this, "Ubaci podatak");
+						t[0].setText("");
+						t[0].requestFocus();
+					}
+					else{
+						t[1].setSelectionStart(0);
+						t[1].setSelectionEnd(25);
+						t[1].requestFocus();
+					}
+				}
+				else if (source == t[1]){
+					t[2].setSelectionStart(0);
+					t[2].setSelectionEnd(40);
+					t[2].requestFocus();}
+				else if (source == t[2]){
+					t[3].setSelectionStart(0);
+					t[3].setSelectionEnd(30);
+					t[3].requestFocus();}
+				else if (source == t[3]){
+					if (t[3].getText().trim().length() == 0){
+						t[3].setText("0");}
+					t[4].setSelectionStart(0);
+					t[4].setSelectionEnd(30);
+					t[4].requestFocus();}
+				else if (source == t[4]){
+					t[5].setSelectionStart(0);
+					t[5].setSelectionEnd(30);
+					t[5].requestFocus();}
+				else if (source == t[5]){
+					t[6].setSelectionStart(0);
+					t[6].setSelectionEnd(30);
+					t[6].requestFocus();}
+				else if (source == t[6]){
+					t[7].setSelectionStart(0);
+					t[7].setSelectionEnd(5);
+					t[7].requestFocus();}
+				else if (source == t[7]){
+					if (t[7].getText().trim().length() == 0){
+						t[7].setText("0");
+					}
+					t[8].setSelectionStart(0);
+					t[8].setSelectionEnd(25);
+					t[8].requestFocus();}
+				else if (source == t[8]){
+					t[9].setSelectionStart(0);
+					t[9].setSelectionEnd(15);
+					t[9].requestFocus();}
+				else if (source == t[9]){
+					t[10].setSelectionStart(0);
+					t[10].setSelectionEnd(15);
+					t[10].requestFocus();}
+				else if (source == t[10]){
+					t[11].setSelectionStart(0);
+					t[11].setSelectionEnd(15);
+					t[11].requestFocus();}
+				else if (source == t[11]){
+					t[12].setSelectionStart(0);
+					t[12].setSelectionEnd(15);
+					t[12].requestFocus();
+				}
+				else if (source == t[12]){
+					if (t[12].getText().trim().length() == 0)
+					{
+						t[12].setSelectionStart(0);
+						t[12].requestFocus();
+					}else{
+						if (proveriDatum(t[12].getText().trim()))
+						{
+							t[13].setSelectionStart(0);
+							t[13].requestFocus();
+						}else{
+							t[12].setSelectionStart(0);
+							t[12].requestFocus();
+						}
+					}
+				}
+				else if (source == t[13]){
+					t[14].setSelectionStart(0);
+					t[14].setSelectionEnd(15);
+					t[14].requestFocus();}
+				else if (source == t[14]){
+					t[15].setSelectionStart(0);
+					t[15].setSelectionEnd(15);
+					t[15].requestFocus();}
+				else if (source == t[15]){
+					if (t[15].getText().trim().length() == 0)
+					{
+						t[15].setSelectionStart(0);
+						t[15].requestFocus();
+					}else{
+						if (proveriDatum(t[15].getText().trim()))
+						{
+							t[16].setSelectionStart(0);
+							t[16].requestFocus();
+						}else{
+							t[15].setSelectionStart(0);
+							t[15].requestFocus();
+						}
+					}
+				}
+				else if (source == t[16]){
+					if (t[16].getText().trim().length() == 0)
+					{
+						t[16].setSelectionStart(0);
+						t[16].requestFocus();
+					}else{
+						if (proveriDatum(t[16].getText().trim()))
+						{
+							t[17].setSelectionStart(0);
+							t[17].requestFocus();
+						}else{
+							t[16].setSelectionStart(0);
+							t[16].requestFocus();
+						}
+					}
+				}
+				else if (source == t[17]){
+					if (t[17].getText().trim().length() == 0)
+					{
+						t[17].setSelectionStart(0);
+						t[17].requestFocus();
+					}else{
+						if (proveriDatum(t[17].getText().trim()))
+						{
+							t[18].setSelectionStart(0);
+							t[18].requestFocus();
+						}else{
+							t[17].setSelectionStart(0);
+							t[17].requestFocus();
+						}
+					}
+				}
+				else if (source == t[18]){
+					if (t[18].getText().trim().length() == 0)
+					{
+						t[18].setText("0");
+					}
+					t[19].setSelectionStart(0);
+					t[19].requestFocus();
+				}
+				else if (source == t[19]){
+					if (t[19].getText().trim().length() == 0)
+					{
+						t[19].setText("0");
+					}
+					if (izmena){
+						izmeni.requestFocus();
+					}
+					else{
+						unesi.requestFocus();
+					}
+				}
+}
+//--------------------------------------------------------------------------
+   private boolean proveriKorisnika(){
+	   boolean ima=false;
+      try {
+         Statement statement = connection.createStatement();
+               String query = "SELECT * FROM korisnici WHERE JMBG='" + 
+						t[0].getText().trim() + "'"; 
+			try {
+		         ResultSet rs = statement.executeQuery( query );
+		         rs.next();
+				displej.setText(rs.getString("ime") + "  " + rs.getString("prezime"));
+				ima = true;
+				t[1].setSelectionStart(0);
+				t[1].setSelectionEnd(13);
+				t[1].requestFocus();
+		      }
+		      catch ( SQLException sqlex ) {
+					JOptionPane.showMessageDialog(this, "Nema tog korisnika morate ga otvoriti");
+					ima = false;
+					t[0].setText("");
+					t[0].requestFocus();
+		      }
+		statement.close();
+   		statement = null;
+		}     
+	  catch ( SQLException sqlex ) {
+				JOptionPane.showMessageDialog(this, "Gre\u0161ka u tra\u017eenju korisnika");
+      }
+		return ima;
+   }
+//--------------------------------------------------------------------------
+   private boolean proveriPravno(){
+	   boolean ima=false;
+      try {
+         Statement statement = connection.createStatement();
+               String query = "SELECT * FROM pravna WHERE matbr='" + 
+						t[0].getText().trim() + "'"; 
+			try {
+		         ResultSet rs = statement.executeQuery( query );
+		         rs.next();
+				displej.setText(rs.getString("naziv"));
+				ima = true;
+				t[1].setSelectionStart(0);
+				t[1].setSelectionEnd(13);
+				t[1].requestFocus();
+		      }
+		      catch ( SQLException sqlex ) {
+					JOptionPane.showMessageDialog(this, "Nema tog preduzeca morate ga otvoriti");
+					ima = false;
+					t[0].setText("");
+					t[0].requestFocus();
+		      }
+		statement.close();
+   		statement = null;
+		}     
+	  catch ( SQLException sqlex ) {
+				JOptionPane.showMessageDialog(this, "Gre\u0161ka u tra\u017eenju pravnih lica");
+      }
+		return ima;
+   }
+//===========================================================================
+class FL implements FocusListener {
+	public void focusGained(FocusEvent e) {
+		Object source = e.getSource();
+			if (source == t[1]){
+				kojiJMBG = String.valueOf(t[0].getText().trim());
+				FindRecord();
+			}
+	}
+//----------------------------------------------------------------------------
+	public void focusLost(FocusEvent e) {
+		Object source = e.getSource();
+	}
+}
+//===========================================================================
+class ML extends MouseAdapter{
+	public void mousePressed(MouseEvent e) {
+		Object source = e.getSource();
+		if (source == jtbl){
+			prikaziIzTabele();
+		}
+	}
+}//end of class ML
+//===========================================================================
+ class QTM2 extends AbstractTableModel {
+	Connection dbconn;
+	//public Vector totalrows;
+	String[] colheads = {"Br.\u0161asije","Reg.broj","Vrsta vozila","Marka","Tip","Br.mesta","Br.motora"};
+//------------------------------------------------------------------------------------------------------------------
+   public QTM2(Connection dbc){
+		JPanel pp = new JPanel();
+		dbconn = dbc;
+		totalrows = new Vector();
+   }
+//------------------------------------------------------------------------------------------------------------------
+   public String getColumnName(int i) { return colheads[i]; }
+   public int getColumnCount() { return 7; }
+   public int getRowCount() { return totalrows.size(); }
+   public Object getValueAt(int row, int col) {
+      return ((String[])totalrows.elementAt(row))[col];
+   }
+   public boolean isCellEditable(int row, int col) {
+      return false;
+   }
+   public void fire() {
+      fireTableChanged(null);
+   }
+//------------------------------------------------------------------------------------------------------------------
+   public String konvertujDatumIzPodatakaQTB(String _datum){
+		String datum,pom;
+		pom = _datum;
+		datum = pom.substring(8,10);
+		datum = datum + "/" + pom.substring(5,7);
+		datum = datum + "/" + pom.substring(0,4);
+	return datum;
+   }
+//------------------------------------------------------------------------------------------------------------------
+   public void query(String _sql) {
+	    Statement statement = null;
+		String sql;
+		sql = _sql;
+		podaci.clear();
+		spodaci.clear();
+		try {
+        statement = dbconn.createStatement();
+               
+            ResultSet rs = statement.executeQuery( sql );
+			totalrows = new Vector();
+            while ( rs.next() ) {
+
+               //Object[] record = new Object[6];
+               String[] record = new String[7];
+               record[0] = rs.getString("brsasije");
+               record[1] = rs.getString("regbroj");
+               record[2] = rs.getString("vrstavozila");
+               record[3] = rs.getString("marka");
+               record[4] = rs.getString("tip");
+               record[5] = rs.getString("brputnmesta");
+               record[6] = rs.getString("brmotora");
+               podaci.addElement(record[0]);
+			   spodaci.addElement(record[1]);
+               totalrows.addElement( record );
+            }
+         }
+         catch ( SQLException sqlex ) {
+         }
+		//.....................................................................................
+		finally{
+			if (statement != null){
+				try{
+					statement.close();
+					statement = null;
+				}catch (Exception e){
+					JOptionPane.showMessageDialog(null, "Nije uspeo da zatvori statement");}}
+		}
+		//.....................................................................................
+    }
+ }//end of class QTM2
+}// end of class korisnici ====================================================================
+

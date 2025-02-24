@@ -1,0 +1,275 @@
+<?xml version="1.0" encoding="UTF-8"  ?>
+<!-- Created with iReport - A designer for JasperReports -->
+<!DOCTYPE jasperReport PUBLIC "//JasperReports//DTD Report Design//EN" "http://jasperreports.sourceforge.net/dtds/jasperreport.dtd">
+<jasperReport
+		 name="radnal_subreport1"
+		 columnCount="1"
+		 printOrder="Vertical"
+		 orientation="Portrait"
+		 pageWidth="535"
+		 pageHeight="802"
+		 columnWidth="535"
+		 columnSpacing="0"
+		 leftMargin="0"
+		 rightMargin="0"
+		 topMargin="0"
+		 bottomMargin="0"
+		 whenNoDataType="NoPages"
+		 isTitleNewPage="false"
+		 isSummaryNewPage="false">
+	<property name="ireport.scriptlethandling" value="0" />
+	<property name="ireport.encoding" value="UTF-8" />
+	<import value="java.util.*" />
+	<import value="net.sf.jasperreports.engine.*" />
+	<import value="net.sf.jasperreports.engine.data.*" />
+
+	<parameter name="rbr" isForPrompting="false" class="java.lang.Integer">
+		<property name="rbr" value="9999999" />
+	</parameter>
+	<queryString><![CDATA[SELECT * FROM mprom1,rnal WHERE mprom1.rnal=rnal.rbr and rnal=$P{rbr}]]></queryString>
+
+	<field name="pre" class="java.lang.Integer"/>
+	<field name="jur" class="java.lang.Integer"/>
+	<field name="mag" class="java.lang.Integer"/>
+	<field name="ui" class="java.lang.Integer"/>
+	<field name="indikator" class="java.lang.Integer"/>
+	<field name="brun" class="java.lang.Double"/>
+	<field name="rbr" class="java.lang.Integer"/>
+	<field name="sifm" class="java.lang.Integer"/>
+	<field name="konto" class="java.lang.Integer"/>
+	<field name="nazivm" class="java.lang.String"/>
+	<field name="datum" class="java.sql.Timestamp"/>
+	<field name="vrdok" class="java.lang.Integer"/>
+	<field name="brdok" class="java.lang.Integer"/>
+	<field name="kupacbr" class="java.lang.Integer"/>
+	<field name="brrac" class="java.lang.Double"/>
+	<field name="prodavnica" class="java.lang.Integer"/>
+	<field name="fak" class="java.lang.Integer"/>
+	<field name="sar" class="java.lang.Integer"/>
+	<field name="kolic" class="java.lang.Double"/>
+	<field name="cena" class="java.lang.Double"/>
+	<field name="vredn" class="java.lang.Double"/>
+	<field name="vrednnivel" class="java.lang.Double"/>
+	<field name="tarbr" class="java.lang.Integer"/>
+	<field name="vrtar" class="java.lang.Integer"/>
+	<field name="por1" class="java.lang.Double"/>
+	<field name="por2" class="java.lang.Double"/>
+	<field name="por3" class="java.lang.Double"/>
+	<field name="zav" class="java.lang.Double"/>
+	<field name="mar" class="java.lang.Double"/>
+	<field name="taksa" class="java.lang.Double"/>
+	<field name="preneto" class="java.lang.Integer"/>
+	<field name="preneto1" class="java.lang.Integer"/>
+	<field name="ispravno" class="java.lang.Integer"/>
+	<field name="pcena" class="java.lang.Double"/>
+	<field name="pcena1" class="java.lang.Double"/>
+	<field name="pvredn" class="java.lang.Double"/>
+	<field name="rabat" class="java.lang.Double"/>
+	<field name="ulazi" class="java.lang.Integer"/>
+	<field name="mtros" class="java.lang.Integer"/>
+	<field name="oznaka" class="java.lang.String"/>
+	<field name="prenosbr" class="java.lang.Integer"/>
+	<field name="najur" class="java.lang.Integer"/>
+	<field name="namag" class="java.lang.Integer"/>
+	<field name="nakonto" class="java.lang.Integer"/>
+	<field name="razmar" class="java.lang.Double"/>
+	<field name="valuta" class="java.sql.Timestamp"/>
+	<field name="datumnaloga" class="java.sql.Timestamp"/>
+	<field name="gorivo" class="java.lang.Integer"/>
+	<field name="kon1" class="java.lang.String"/>
+	<field name="kon2" class="java.lang.String"/>
+	<field name="kon3" class="java.lang.String"/>
+	<field name="imaporez" class="java.lang.Integer"/>
+	<field name="uvoz" class="java.lang.Integer"/>
+	<field name="moze" class="java.lang.Integer"/>
+	<field name="mesec" class="java.lang.Integer"/>
+	<field name="smena" class="java.lang.Integer"/>
+	<field name="prodavac" class="java.lang.Integer"/>
+	<field name="kojakasa" class="java.lang.Integer"/>
+	<field name="kolicul" class="java.lang.Double"/>
+	<field name="koliciz" class="java.lang.Double"/>
+	<field name="kolicme" class="java.lang.Double"/>
+	<field name="z" class="java.lang.Integer"/>
+	<field name="vozilo" class="java.lang.String"/>
+	<field name="rnal" class="java.lang.Integer"/>
+	<field name="brsasije" class="java.lang.String"/>
+	<field name="cenarada" class="java.lang.Double"/>
+	<field name="cenadelova" class="java.lang.Double"/>
+	<field name="garancija" class="java.lang.String"/>
+	<field name="opiskvara" class="java.lang.String"/>
+	<field name="opisradova" class="java.lang.String"/>
+	<field name="delovi" class="java.lang.String"/>
+	<field name="jmbg" class="java.lang.String"/>
+	<field name="placeno" class="java.lang.Integer"/>
+	<field name="napomena" class="java.lang.String"/>
+	<field name="reklamacija" class="java.lang.Integer"/>
+	<field name="regbroj" class="java.lang.String"/>
+
+		<background>
+			<band height="0"  isSplitAllowed="true" >
+			</band>
+		</background>
+		<title>
+			<band height="0"  isSplitAllowed="true" >
+			</band>
+		</title>
+		<pageHeader>
+			<band height="0"  isSplitAllowed="true" >
+			</band>
+		</pageHeader>
+		<columnHeader>
+			<band height="20"  isSplitAllowed="true" >
+				<rectangle radius="0" >
+					<reportElement
+						mode="Opaque"
+						x="1"
+						y="1"
+						width="534"
+						height="17"
+						forecolor="#000000"
+						backcolor="#CCCCCC"
+						key="element-22"/>
+					<graphicElement stretchType="NoStretch" pen="Thin"/>
+				</rectangle>
+				<staticText>
+					<reportElement
+						x="0"
+						y="1"
+						width="61"
+						height="16"
+						forecolor="#000000"
+						backcolor="#FFFFFF"
+						key="element-90"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" leftPadding="2" rightBorder="None" rightBorderColor="#000000" rightPadding="2" bottomBorder="None" bottomBorderColor="#000000"/>
+					<textElement>
+						<font fontName="" size="12"/>
+					</textElement>
+				<text><![CDATA[Šifra]]></text>
+				</staticText>
+				<staticText>
+					<reportElement
+						x="61"
+						y="1"
+						width="263"
+						height="16"
+						forecolor="#000000"
+						backcolor="#FFFFFF"
+						key="element-90"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" leftPadding="2" rightBorder="None" rightBorderColor="#000000" rightPadding="2" bottomBorder="None" bottomBorderColor="#000000"/>
+					<textElement>
+						<font fontName="" size="12"/>
+					</textElement>
+				<text><![CDATA[Naziv dela]]></text>
+				</staticText>
+				<staticText>
+					<reportElement
+						x="324"
+						y="1"
+						width="69"
+						height="16"
+						forecolor="#000000"
+						backcolor="#FFFFFF"
+						key="element-90"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" leftPadding="2" rightBorder="None" rightBorderColor="#000000" rightPadding="2" bottomBorder="None" bottomBorderColor="#000000"/>
+					<textElement>
+						<font fontName="" size="12"/>
+					</textElement>
+				<text><![CDATA[Količina]]></text>
+				</staticText>
+				<staticText>
+					<reportElement
+						x="399"
+						y="1"
+						width="133"
+						height="16"
+						forecolor="#000000"
+						backcolor="#FFFFFF"
+						key="element-90"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" leftPadding="2" rightBorder="None" rightBorderColor="#000000" rightPadding="2" bottomBorder="None" bottomBorderColor="#000000"/>
+					<textElement>
+						<font fontName="" size="12"/>
+					</textElement>
+				<text><![CDATA[Cena]]></text>
+				</staticText>
+			</band>
+		</columnHeader>
+		<detail>
+			<band height="19"  isSplitAllowed="true" >
+				<line direction="TopDown">
+					<reportElement
+						x="0"
+						y="17"
+						width="535"
+						height="0"
+						forecolor="#808080"
+						key="line"
+						positionType="FixRelativeToBottom"/>
+					<graphicElement stretchType="NoStretch" pen="Thin"/>
+				</line>
+				<textField isStretchWithOverflow="true" pattern="" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="0"
+						y="1"
+						width="61"
+						height="15"
+						key="textField"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" leftPadding="2" rightBorder="None" rightBorderColor="#000000" rightPadding="2" bottomBorder="None" bottomBorderColor="#000000"/>
+					<textElement>
+						<font fontName="Times-Roman" size="10"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.Integer"><![CDATA[$F{sifm}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true" pattern="" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="61"
+						y="1"
+						width="263"
+						height="15"
+						key="textField"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" leftPadding="2" rightBorder="None" rightBorderColor="#000000" rightPadding="2" bottomBorder="None" bottomBorderColor="#000000"/>
+					<textElement>
+						<font fontName="Times-Roman" size="10"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA[$F{nazivm}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true" pattern="###0" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="324"
+						y="1"
+						width="75"
+						height="15"
+						key="textField"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" leftPadding="2" rightBorder="None" rightBorderColor="#000000" rightPadding="2" bottomBorder="None" bottomBorderColor="#000000"/>
+					<textElement>
+						<font fontName="Times-Roman" size="10"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.Double"><![CDATA[$F{kolic}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true" pattern="#,##0.00" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="399"
+						y="1"
+						width="133"
+						height="15"
+						key="textField"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" leftPadding="2" rightBorder="None" rightBorderColor="#000000" rightPadding="2" bottomBorder="None" bottomBorderColor="#000000"/>
+					<textElement>
+						<font fontName="Times-Roman" size="10"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.Double"><![CDATA[$F{cena}]]></textFieldExpression>
+				</textField>
+			</band>
+		</detail>
+		<columnFooter>
+			<band height="0"  isSplitAllowed="true" >
+			</band>
+		</columnFooter>
+		<pageFooter>
+			<band height="0"  isSplitAllowed="true" >
+			</band>
+		</pageFooter>
+		<summary>
+			<band height="0"  isSplitAllowed="true" >
+			</band>
+		</summary>
+</jasperReport>
