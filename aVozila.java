@@ -44,6 +44,7 @@ public class aVozila extends JInternalFrame implements InternalFrameListener
 		setResizable(false);
         setDefaultCloseOperation(WindowConstants.HIDE_ON_CLOSE);
 	    addInternalFrameListener(this);
+		//Probni komentar
 
 		JPanel main = new JPanel();
 		main.setLayout( new BorderLayout() );
