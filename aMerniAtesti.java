@@ -59,6 +59,7 @@ public class aMerniAtesti extends JInternalFrame implements InternalFrameListene
 		txtNaziv = new JFormattedTextField(createFormatter(fmm,3));
 		txtNaziv.setBounds(50,5,200,visina);
 		txtNaziv.setEditable(false);
+		txtNaziv.setText("Merni instrument");		
 		mainmain.add(txtNaziv);
 
 		//******************************************************************
@@ -197,7 +198,7 @@ public class aMerniAtesti extends JInternalFrame implements InternalFrameListene
 
 
 		fmm = "**************************************************";
-		l[1] = new JLabel("Naziv :");
+		l[1] = new JLabel("Naziv mernog sredstva :");
         t[1] = new JFormattedTextField(createFormatter(fmm,3));
 		t[1].setColumns(22);
 		t[1].addFocusListener(new FL());
@@ -205,22 +206,22 @@ public class aMerniAtesti extends JInternalFrame implements InternalFrameListene
         t[1].getActionMap().put("check", new AbstractAction() {
             public void actionPerformed(ActionEvent e) {Akcija(t[1]);}});
 
-		l[2] = new JLabel("Tip :");
-        t[2] = new JFormattedTextField(createFormatter(fmm,3));
+		l[2] = new JLabel("Servisni datum :");
+        t[2] = new JFormattedTextField(createFormatter(fmm,4));
 		t[2].setColumns(22);
         t[2].getInputMap().put(KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0),"check");
         t[2].getActionMap().put("check", new AbstractAction() {
             public void actionPerformed(ActionEvent e) {Akcija(t[2]);}});
 
-		l[3] = new JLabel("Fab.broj :");
-        t[3] = new JFormattedTextField(createFormatter(fmm,3));
+		l[3] = new JLabel("Vazi do :");
+        t[3] = new JFormattedTextField(createFormatter(fmm,4));
 		t[3].setColumns(22);
 		t[3].addFocusListener(new FL());
         t[3].getInputMap().put(KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0),"check");
         t[3].getActionMap().put("check", new AbstractAction() {
             public void actionPerformed(ActionEvent e) {Akcija(t[3]);}});
 
-		l[4] = new JLabel("Inventarski broj :");
+		l[4] = new JLabel("Zapisnik broj :");
         t[4] = new JFormattedTextField(createFormatter(fmm,3));
 		t[4].setColumns(22);
 		t[4].addFocusListener(new FL());
@@ -228,7 +229,8 @@ public class aMerniAtesti extends JInternalFrame implements InternalFrameListene
         t[4].getActionMap().put("check", new AbstractAction() {
             public void actionPerformed(ActionEvent e) {Akcija(t[4]);}});
 
-		l[5] = new JLabel("Proizvo\u0111a\u010d :");
+		//l[5] = new JLabel("Proizvo\u0111a\u010d :");
+		l[5] = new JLabel("Opis :");
         t[5] = new JFormattedTextField(createFormatter(fmm,3));
 		t[5].setColumns(22);
 		t[5].addFocusListener(new FL());
@@ -236,7 +238,7 @@ public class aMerniAtesti extends JInternalFrame implements InternalFrameListene
         t[5].getActionMap().put("check", new AbstractAction() {
             public void actionPerformed(ActionEvent e) {Akcija(t[5]);}});
 
-		l[6] = new JLabel("Godina proizvodnje :");
+		l[6] = new JLabel("Predlog za rashod :");
         t[6] = new JFormattedTextField(createFormatter(fmm,3));
 		t[6].setColumns(22);
 		t[6].addFocusListener(new FL());
@@ -245,7 +247,7 @@ public class aMerniAtesti extends JInternalFrame implements InternalFrameListene
             public void actionPerformed(ActionEvent e) {Akcija(t[6]);}});
 
 		fmm = "**********";
-		l[7] = new JLabel("Karton :");
+		l[7] = new JLabel("Uzrok :");
         t[7] = new JFormattedTextField(createFormatter(fmm,3));
 		t[7].setColumns(22);
 		t[7].addFocusListener(new FL());
@@ -545,7 +547,7 @@ protected MaskFormatter createFormatter(String s, int koji) {
 
 	   	qtbl = new mQTM4(connection);
 		String sql;
-		sql = "SELECT * FROM masine order by sifra" ;
+		sql = "SELECT * FROM atesti order by sifmas" ;
 	   	qtbl.query(sql);
  	   	jtbl = new JTable( qtbl );
 		jtbl.addMouseListener(new ML());
@@ -573,7 +575,8 @@ protected MaskFormatter createFormatter(String s, int koji) {
 				}
 				else if (source == t[1]){
 					t[2].setSelectionStart(0);
-					t[2].requestFocus();}
+					t[2].requestFocus();
+				}
 				else if (source == t[2]){
 					t[3].setSelectionStart(0);
 					t[3].requestFocus();
@@ -637,7 +640,7 @@ class ML extends MouseAdapter{
 //===========================================================================
  class mQTM4 extends AbstractTableModel {
 	Connection dbconn;
-	String[] colheads = {"\u0160ifra","Naziv masine","Tip","Fab.br","Inv.br.","Proizvodjac","God.pr.","Napomena"};
+	String[] colheads = {"\u0160ifra","Naziv mernog sredstva","Serv. datum","Vazi do","Zap.br.","Opis","Pred rash", "Uzrok","Napomena"};
 
 //------------------------------------------------------------------------------------------------------------------
    public mQTM4(Connection dbc){
@@ -681,13 +684,14 @@ class ML extends MouseAdapter{
 			totalrows = new Vector();
             while ( rs.next() ) {
                String[] record = new String[8];
-               record[0] = rs.getString("sifra");
-               record[1] = rs.getString("naziv");
-               record[2] = rs.getString("tip");
-               record[3] = rs.getString("fabbroj");
-               record[4] = rs.getString("invbroj");
-               record[5] = rs.getString("proizvodjac");
-               record[6] = rs.getString("godizrade");
+               record[0] = rs.getString("rbr");
+               record[1] = rs.getString("sifmas");
+               record[2] = rs.getString("servdatum");
+               record[3] = rs.getString("vazido");
+               record[4] = rs.getString("zapbr");
+               record[5] = rs.getString("opis");
+               record[6] = rs.getString("predrash");
+               record[6] = rs.getString("uzrok");
                record[7] = rs.getString("napomena");
                podaci.addElement(record[0]);
                totalrows.addElement( record );
