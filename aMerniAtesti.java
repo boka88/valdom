@@ -33,18 +33,37 @@ public class aMerniAtesti extends JInternalFrame implements InternalFrameListene
 	private JButton novi,unesi,izmeni;
 	private ConnMySQL dbconn;
 	private Connection connection = null;
-    public JFormattedTextField t[],mmoj;
+    public JFormattedTextField t[],mmoj,txtNaziv;
    	private JLabel  l[];
    	int n_fields;
 //------------------------------------------------------------------------------------------------------------------
     public aMerniAtesti() {
 		super("", true, true, true, true);
-        setTitle("�ifarnik ma\u0161ina");
+        setTitle("Unos atesta mernih instrumenata");
 		setMaximizable(false);
 		setResizable(false);
         setDefaultCloseOperation(WindowConstants.HIDE_ON_CLOSE);
 	    addInternalFrameListener(this);
 
+		//******************************************************************
+		int visina = 25;
+		JPanel mainmain = new JPanel();
+		mainmain.setLayout(null);
+		mainmain.setBorder( new TitledBorder("") );
+
+
+		JLabel lblNaziv = new JLabel("Naziv:");
+		lblNaziv.setBounds(5,5,40,visina);
+		mainmain.add(lblNaziv);
+		String fmm = "**************************************";
+		txtNaziv = new JFormattedTextField(createFormatter(fmm,3));
+		txtNaziv.setBounds(50,5,200,visina);
+		txtNaziv.setEditable(false);
+		mainmain.add(txtNaziv);
+
+		//******************************************************************
+
+		
 		JPanel main = new JPanel();
 		main.setLayout( new BorderLayout() );
 
@@ -84,21 +103,21 @@ public class aMerniAtesti extends JInternalFrame implements InternalFrameListene
 				   UpdateRecord(); }});
 		buttonPanel.add( izmeni );
 
-		JButton brisi = new JButton("Bri�i slog");
+		JButton brisi = new JButton("Bri?i slog");
 		brisi.setMnemonic('B');
 		brisi.addActionListener(new ActionListener() {
 	               public void actionPerformed(ActionEvent e) {
 				   DeleteRecord(); }});
 		buttonPanel.add( brisi );
 
-		JButton trazi = new JButton("Tra�i");
+		JButton trazi = new JButton("Tra?i");
 		trazi.setMnemonic('T');
 		trazi.addActionListener(new ActionListener() {
 	               public void actionPerformed(ActionEvent e) {
 				   TraziRecord(); }});
 		buttonPanel.add( trazi );
 
-		JButton stampa = new JButton("�tampa spisak");
+		JButton stampa = new JButton("?tampa spisak");
 		stampa.setMnemonic('P');
 		stampa.addActionListener(new ActionListener() {
 	               public void actionPerformed(ActionEvent e) {
@@ -114,17 +133,22 @@ public class aMerniAtesti extends JInternalFrame implements InternalFrameListene
 		
 		pPre = "1";
 		uzmiKonekciju();
+		glavni.setBounds(5,100,800,300);
+		mainmain.add(glavni);
 
 		container.add(buildFilterPanel());
 		glavni.add(container);
 		glavni.add(buildTable());
-		main.add(glavni, BorderLayout.CENTER);
+
+
+		main.add(mainmain, BorderLayout.CENTER);
 		main.add(buttonPanel, BorderLayout.SOUTH);
 		getContentPane().add(main);
 		pack();
-		setSize(820,350);
+		setSize(820,500);
 		centerDialog();
 		UIManager.addPropertyChangeListener(new UISwitchListener(container));
+		t[0].requestFocus();
 
     }
 //------------------------------------------------------------------------------------------------------------------
