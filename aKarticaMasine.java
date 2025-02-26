@@ -407,7 +407,7 @@ protected MaskFormatter createFormatter(String s, int koji) {
 							izvrsi(sql);
 							sql = "INSERT INTO tmpkvar SELECT * FROM kvarovi WHERE kvarovi.rbr=" + rbr;
 							izvrsi(sql);
-							sql = "INSERT INTO tmpkvardelovi SELECT * FROM kvarovidelovi WHERE kvarovidelovi.brojkvara=" + t[0].getText().trim();
+							sql = "INSERT INTO tmpkvardelovi SELECT * FROM kvarovidelovi WHERE kvarovidelovi.brojkvara=" + rbr;
 							izvrsi(sql);
 							
 							jPrintKvarPDF pn = new jPrintKvarPDF(connection,t[0].getText().trim(),brojpdffajla);
