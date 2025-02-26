@@ -72,7 +72,7 @@ public class aMerniAtesti extends JInternalFrame implements InternalFrameListene
 		txtInv.setText("OB1 - SD");		
 		mainmain.add(txtInv);
 		
-		JLabel lblSluzbOzn = new JLabel("Sluzbena oznaka: "); // U Kartonu polje se zove sifra, menjamo u inventarski broj
+		JLabel lblSluzbOzn = new JLabel("Sluzbena oznaka: ");
 		lblSluzbOzn.setBounds(510,5,100,visina);
 		mainmain.add(lblSluzbOzn);
 		fmm = "**************************************";
