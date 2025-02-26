@@ -52,15 +52,35 @@ public class aMerniAtesti extends JInternalFrame implements InternalFrameListene
 		mainmain.setBorder( new TitledBorder("") );
 
 
-		JLabel lblNaziv = new JLabel("Naziv:");
-		lblNaziv.setBounds(5,5,40,visina);
+		JLabel lblNaziv = new JLabel("Naziv (tip) merila:");
+		lblNaziv.setBounds(5,5,100,visina);
 		mainmain.add(lblNaziv);
 		String fmm = "**************************************";
 		txtNaziv = new JFormattedTextField(createFormatter(fmm,3));
-		txtNaziv.setBounds(50,5,200,visina);
+		txtNaziv.setBounds(100,5,150,visina);
 		txtNaziv.setEditable(false);
 		txtNaziv.setText("Merni instrument");		
 		mainmain.add(txtNaziv);
+		
+		JLabel lblInvBroj = new JLabel("Inventarski broj: "); // U Kartonu polje se zove sifra, menjamo u inventarski broj
+		lblInvBroj.setBounds(260,5,100,visina);
+		mainmain.add(lblInvBroj);
+		fmm = "**************************************";
+		JFormattedTextField txtInv = new JFormattedTextField(createFormatter(fmm,3));
+		txtInv.setBounds(350,5,150,visina);
+		txtInv.setEditable(false);
+		txtInv.setText("OB1 - SD");		
+		mainmain.add(txtInv);
+		
+		JLabel lblSluzbOzn = new JLabel("Sluzbena oznaka: "); // U Kartonu polje se zove sifra, menjamo u inventarski broj
+		lblSluzbOzn.setBounds(510,5,100,visina);
+		mainmain.add(lblSluzbOzn);
+		fmm = "**************************************";
+		JFormattedTextField txtSluzb = new JFormattedTextField(createFormatter(fmm,3));
+		txtSluzb.setBounds(610,5,150,visina);
+		txtSluzb.setEditable(false);
+		txtSluzb.setText("RS 16-014-1");		
+		mainmain.add(txtSluzb);
 
 		//******************************************************************
 
