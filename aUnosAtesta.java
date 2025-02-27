@@ -820,6 +820,24 @@ protected MaskFormatter createFormatter(String s, int koji) {
 			alat="X";
 		}
 
+		/*
+		String ddat, dddat, masina = null, alat = null; // Promenio inicijalne vrednosti na null
+		Statement statement = null;
+		int placeno = 0, reklamacija = 0;
+		
+		// Promeni uslove, postavi samo jedan checkbox na "X" i drugi na null
+		if (check1.isSelected()) {
+			masina = "X";
+		}
+		if (check2.isSelected()) {
+			alat = "X";
+		}
+
+		// Ako nijedna opcija nije selektovana, možeš dodeliti default vrednost (npr. "N/A")
+		if (masina == null && alat == null) {
+			masina = "N/A"; // ili alat = "N/A"; u zavisnosti od tvog poslovnog pravila
+		}
+		*/
       try {
          statement = connection.createStatement();
 
