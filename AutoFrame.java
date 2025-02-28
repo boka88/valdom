@@ -265,6 +265,7 @@ public class AutoFrame extends JFrame {
 			JMenuItem prprijem = new JMenuItem("Pregled prijemnica");
 			JMenuItem prizdat = new JMenuItem("Pregled izdatnica");
 			JMenuItem prutrdel = new JMenuItem("Pregled utro\u0161enih delova");
+			JMenuItem prazNal = new JMenuItem("Prazan nalog");
 
 
 
@@ -305,6 +306,9 @@ public class AutoFrame extends JFrame {
 		prutrdel.addActionListener(new ActionListener() {
 	                       public void actionPerformed(ActionEvent e) {
 				   PregledUtrosenihDelova();}});
+		prazNal.addActionListener(new ActionListener() {
+	                       public void actionPerformed(ActionEvent e) {
+				   PrazanNalog();}});
 
 
 
@@ -338,6 +342,8 @@ public class AutoFrame extends JFrame {
 	nom.add(prprijem);
 	nom.add(prizdat);
 	nom.add(prutrdel);
+	nom.add(prazNal);
+	
 	/*
 	nom.add(aaa1);
 	nom.add(aaa2);
@@ -910,6 +916,16 @@ public class AutoFrame extends JFrame {
 			pred.setVisible(true);
 			pred.setSelected(true); 
 		} catch (java.beans.PropertyVetoException e2) {}
+	}
+//--------------------------------------------------------------------------------------------
+    public void PrazanNalog() {
+		aPrazanNalog aa = new aPrazanNalog();
+		aa.setVisible(true);
+			/*desktop.add(aa, "");
+		try { 
+			aa.setVisible(true);
+			//pred.setSelected(true); 
+		} catch (java.beans.PropertyVetoException e2) {}*/
 	}
 
 }// end of FinFrame class
