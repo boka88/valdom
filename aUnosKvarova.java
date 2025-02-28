@@ -814,30 +814,13 @@ protected MaskFormatter createFormatter(String s, int koji) {
 		if (check1.isSelected())
 		{
 			masina="X";
+			alat = "";
 		}
 		if (check2.isSelected())
 		{
 			alat="X";
+			masina="";
 		}
-
-		/*
-		String ddat, dddat, masina = null, alat = null; // Promenio inicijalne vrednosti na null
-		Statement statement = null;
-		int placeno = 0, reklamacija = 0;
-		
-		// Promeni uslove, postavi samo jedan checkbox na "X" i drugi na null
-		if (check1.isSelected()) {
-			masina = "X";
-		}
-		if (check2.isSelected()) {
-			alat = "X";
-		}
-
-		// Ako nijedna opcija nije selektovana, možeš dodeliti default vrednost (npr. "N/A")
-		if (masina == null && alat == null) {
-			masina = "N/A"; // ili alat = "N/A"; u zavisnosti od tvog poslovnog pravila
-		}
-		*/
 
       try {
          statement = connection.createStatement();
@@ -850,7 +833,7 @@ protected MaskFormatter createFormatter(String s, int koji) {
 
 			String query = "INSERT INTO kvarovi(rbr,datum,sifra,naziv," +
 				"sifraradnika,imeprezime,opiskvara,opisradova," +
-				"napomena,brojdokumenta,kontrolisao,radio,datumrada,drugidokument,alat,masina,karton)" +
+				"napomena,brojdokumenta,kontrolisao,radio,datumrada,drugidokument,masina,alat,karton)" +
 				" VALUES(" +
 				Integer.parseInt(t[0].getText().trim()) + ",'" +
 				dddat + "'," +
@@ -1012,6 +995,7 @@ public void DeleteRecord() {
 //------------------------------------------------------------------------------------------------------------------
 	public void FindRecord(int _koji) {
 	  Statement statement = null;
+	  String masina="",alat="";
 	  int plac,rekl;
       try {
          statement = connection.createStatement();
@@ -1036,14 +1020,16 @@ public void DeleteRecord() {
 		         	txtKartonMasine.setText(rs.getString("karton"));
 		         	
 					txtDatumrada.setText(konvertujDatumIzPodataka(rs.getString("datumrada")));
+					masina = rs.getString("masina");
+					alat = rs.getString("alat");
 					
-					if (rs.getString("masina").equals("X"))
+					if (masina.equals("X"))
 					{
 						check1.setSelected(true);
 					}else{
 						check1.setSelected(false);
 					}
-					if (rs.getString("alat").equals("X"))
+					if (alat.equals("X"))
 					{
 						check2.setSelected(true);
 					}else{
