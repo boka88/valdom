@@ -21,7 +21,7 @@ import java.beans.PropertyVetoException.*;
   * This is the main container frame for the Fin app
   *
   * @version 1.0
-  * @author Boris Ivanisevic
+  * @author Nenad Ivanisevic
   */
 public class AutoFrame extends JFrame {
 
@@ -52,7 +52,7 @@ public class AutoFrame extends JFrame {
 		
 		UIManager.put("MenuItem.font", veciFont);
 		UIManager.put("Menu.font", veciFont); // Opcionalno i za JMenu
-		// A?uriranje UI nakon promene
+		// A�uriranje UI nakon promene
 		SwingUtilities.updateComponentTreeUI(this);
 		
 		classbekap = new classBekap(aLogin.konekcija);
@@ -265,13 +265,10 @@ public class AutoFrame extends JFrame {
 			JMenuItem prprijem = new JMenuItem("Pregled prijemnica");
 			JMenuItem prizdat = new JMenuItem("Pregled izdatnica");
 			JMenuItem prutrdel = new JMenuItem("Pregled utro\u0161enih delova");
-
-			JMenuItem prazannalog = new JMenuItem("Stampa praznog naloga");
-
+			JMenuItem prazNal = new JMenuItem("Prazan nalog");
 
 
-			
-			
+
 			//----  ne koristi se ---------------------------------------------
 			JMenuItem nom4 = new JMenuItem("Kartice korisnika - dugovanja");
 			JMenuItem nom41 = new JMenuItem("Kartice korisnika - radni nalozi");
@@ -309,12 +306,9 @@ public class AutoFrame extends JFrame {
 		prutrdel.addActionListener(new ActionListener() {
 	                       public void actionPerformed(ActionEvent e) {
 				   PregledUtrosenihDelova();}});
-
-		prazannalog.addActionListener(new ActionListener() {
+		prazNal.addActionListener(new ActionListener() {
 	                       public void actionPerformed(ActionEvent e) {
 				   PrazanNalog();}});
-
-
 
 
 
@@ -348,8 +342,8 @@ public class AutoFrame extends JFrame {
 	nom.add(prprijem);
 	nom.add(prizdat);
 	nom.add(prutrdel);
-	nom.addSeparator();
-	nom.add(prazannalog);
+	nom.add(prazNal);
+	
 	/*
 	nom.add(aaa1);
 	nom.add(aaa2);
@@ -424,8 +418,6 @@ public class AutoFrame extends JFrame {
 	JMenuItem stavka3 = new JMenuItem("Zamena ulja");
 	
 	JMenuItem repar = new JMenuItem("Reparacija baze");
-	
-	JMenuItem graph = new JMenuItem("Grafikon");
 
 		about.addActionListener(new ActionListener() {
 	    public void actionPerformed(ActionEvent e) {
@@ -441,9 +433,6 @@ public class AutoFrame extends JFrame {
 		repar.addActionListener(new ActionListener() {
 	                       public void actionPerformed(ActionEvent e) {
 				   ReparacijaBaze();}});
-		graph.addActionListener(new ActionListener() {
-	                       public void actionPerformed(ActionEvent e) {
-				   Grafikon();}});
 
 
 		help.add(openHelp);
@@ -451,7 +440,6 @@ public class AutoFrame extends JFrame {
 		help.add(openPrint);
 		help.addSeparator();
 		help.add(repar);
-		help.add(graph);
 		return help;
     }
 //--------------------------------------------------------------------------------------------
@@ -926,21 +914,18 @@ public class AutoFrame extends JFrame {
 			desktop.add(pred, "");
 		try { 
 			pred.setVisible(true);
-			pred.setSelected(true); 
+			pred.setSelected(true);
 		} catch (java.beans.PropertyVetoException e2) {}
 	}
-//------------------------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------
     public void PrazanNalog() {
-		aPrazanNalog rrr = new aPrazanNalog();
-		rrr.setVisible(true);
-	}
-//------------------------------------------------------------------------------------------------------------------
-    public void Grafikon() {
-		JInternalFrame pred = new uGraph();
-			desktop.add(pred, "");
+		aPrazanNalog aa = new aPrazanNalog();
+		aa.setVisible(true);
+			/*desktop.add(aa, "");
 		try { 
-			pred.setVisible(true);
-			pred.setSelected(true); 
-		} catch (java.beans.PropertyVetoException e2) {}
+			aa.setVisible(true);
+			//pred.setSelected(true); 
+		} catch (java.beans.PropertyVetoException e2) {}*/
 	}
+
 }// end of FinFrame class
