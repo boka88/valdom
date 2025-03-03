@@ -51,7 +51,6 @@ public class aMerniAtesti extends JInternalFrame implements InternalFrameListene
 		mainmain.setLayout(null);
 		mainmain.setBorder( new TitledBorder("") );
 
-
 		JLabel lblNaziv = new JLabel("Naziv (tip) merila:");
 		lblNaziv.setBounds(5,5,100,visina);
 		mainmain.add(lblNaziv);
@@ -81,6 +80,86 @@ public class aMerniAtesti extends JInternalFrame implements InternalFrameListene
 		txtSluzb.setEditable(false);
 		txtSluzb.setText("RS 16-014-1");		
 		mainmain.add(txtSluzb);
+
+		JLabel lblMerOps = new JLabel("Merni opseg: ");
+		lblMerOps.setBounds(5,35,100,visina);
+		mainmain.add(lblMerOps);
+		fmm = "**************************************";
+		JFormattedTextField txtMerOps = new JFormattedTextField(createFormatter(fmm,3));
+		txtMerOps.setBounds(100,35,150,visina);
+		txtMerOps.setEditable(false);
+		txtMerOps.setText("100g - 15/30 kg");		
+		mainmain.add(txtMerOps);
+
+		JLabel lblKlasTac = new JLabel("Klasa tacnosti: ");
+		lblKlasTac.setBounds(260,35,100,visina);
+		mainmain.add(lblKlasTac);
+		fmm = "**************************************";
+		JFormattedTextField txtKlasTac = new JFormattedTextField(createFormatter(fmm,3));
+		txtKlasTac.setBounds(350,35,150,visina);
+		txtKlasTac.setEditable(false);
+		txtKlasTac.setText("III");		
+		mainmain.add(txtKlasTac);
+
+		JLabel lblDatNab = new JLabel("Datum nabavke: ");
+		lblDatNab.setBounds(510,35,100,visina);
+		mainmain.add(lblDatNab);
+		fmm = "**************************************";
+		JFormattedTextField txtDatNab = new JFormattedTextField(createFormatter(fmm,3));
+		txtDatNab.setBounds(610,35,150,visina);
+		txtDatNab.setEditable(false);
+		txtDatNab.setText("2024");		
+		mainmain.add(txtDatNab);
+
+		JLabel lblPrPreg = new JLabel("Prvi pregled: ");
+		lblPrPreg.setBounds(5,65,100,visina);
+		mainmain.add(lblPrPreg);
+		fmm = "**************************************";
+		JFormattedTextField txtPrPreg = new JFormattedTextField(createFormatter(fmm,3));
+		txtPrPreg.setBounds(100,65,150,visina);
+		txtPrPreg.setEditable(false);
+		txtPrPreg.setText("20-07-2024");		
+		mainmain.add(txtPrPreg);
+		
+		JLabel lblPrviPreg = new JLabel("Period pregleda: ");
+		lblPrviPreg.setBounds(260,65,100,visina);
+		mainmain.add(lblPrviPreg);
+		fmm = "**************************************";
+		JFormattedTextField txtPrviPreg = new JFormattedTextField(createFormatter(fmm,3));
+		txtPrviPreg.setBounds(350,65,150,visina);
+		txtPrviPreg.setEditable(false);
+		txtPrviPreg.setText("2 godine");		
+		mainmain.add(txtPrviPreg);
+
+		JLabel lblProiz = new JLabel("Proizvodjac: ");
+		lblProiz.setBounds(510,65,100,visina);
+		mainmain.add(lblProiz);
+		fmm = "**************************************";
+		JFormattedTextField txtProiz = new JFormattedTextField(createFormatter(fmm,3));
+		txtProiz.setBounds(610,65,150,visina);
+		txtProiz.setEditable(false);
+		txtProiz.setText("Birotehna Smederevo");		
+		mainmain.add(txtProiz);
+
+		JLabel lblGodProiz = new JLabel("Godina proizvodnje: ");
+		lblGodProiz.setBounds(5,95,100,visina);
+		mainmain.add(lblGodProiz);
+		fmm = "**************************************";
+		JFormattedTextField txtGodProiz = new JFormattedTextField(createFormatter(fmm,3));
+		txtGodProiz.setBounds(100,95,150,visina);
+		txtGodProiz.setEditable(false);
+		txtGodProiz.setText("2024");		
+		mainmain.add(txtGodProiz);
+		
+		JLabel lblSerBr = new JLabel("Serijski broj: ");
+		lblSerBr.setBounds(260,95,100,visina);
+		mainmain.add(lblSerBr);
+		fmm = "**************************************";
+		JFormattedTextField txtSerBr = new JFormattedTextField(createFormatter(fmm,3));
+		txtSerBr.setBounds(350,95,150,visina);
+		txtSerBr.setEditable(false);
+		txtSerBr.setText("601658-1");		
+		mainmain.add(txtSerBr);
 
 		//******************************************************************
 
@@ -154,7 +233,7 @@ public class aMerniAtesti extends JInternalFrame implements InternalFrameListene
 		
 		pPre = "1";
 		uzmiKonekciju();
-		glavni.setBounds(5,100,800,300);
+		glavni.setBounds(5,150,800,300);
 		mainmain.add(glavni);
 
 		container.add(buildFilterPanel());
@@ -166,7 +245,7 @@ public class aMerniAtesti extends JInternalFrame implements InternalFrameListene
 		main.add(buttonPanel, BorderLayout.SOUTH);
 		getContentPane().add(main);
 		pack();
-		setSize(820,500);
+		setSize(820,550);
 		centerDialog();
 		UIManager.addPropertyChangeListener(new UISwitchListener(container));
 		t[0].requestFocus();
