@@ -30,11 +30,11 @@ public class aMerniAtesti extends JInternalFrame implements InternalFrameListene
 	private String koji;
 	private MaskFormatter fmt = null;
 	private String pPre,nazivPre;
-	private JButton novi,unesi,izmeni;
+	private JButton novi,unesi,izmeni, izbormersred;
 	private ConnMySQL dbconn;
 	private Connection connection = null;
-    public JFormattedTextField t[],mmoj,txtNaziv;
-   	private JLabel  l[];
+    public static JFormattedTextField t[],mmoj,txtNaziv,txtMernoSredstvo;
+   	private JLabel  l[], lblMernoSredstvo;
    	int n_fields;
 //------------------------------------------------------------------------------------------------------------------
     public aMerniAtesti() {
@@ -58,7 +58,6 @@ public class aMerniAtesti extends JInternalFrame implements InternalFrameListene
 		txtNaziv = new JFormattedTextField(createFormatter(fmm,3));
 		txtNaziv.setBounds(100,5,150,visina);
 		txtNaziv.setEditable(false);
-		txtNaziv.setText("Merni instrument");		
 		mainmain.add(txtNaziv);
 		
 		JLabel lblInvBroj = new JLabel("Inventarski broj: "); // U Kartonu polje se zove sifra, menjamo u inventarski broj
@@ -68,7 +67,6 @@ public class aMerniAtesti extends JInternalFrame implements InternalFrameListene
 		JFormattedTextField txtInv = new JFormattedTextField(createFormatter(fmm,3));
 		txtInv.setBounds(350,5,150,visina);
 		txtInv.setEditable(false);
-		txtInv.setText("OB1 - SD");		
 		mainmain.add(txtInv);
 		
 		JLabel lblSluzbOzn = new JLabel("Sluzbena oznaka: ");
@@ -78,7 +76,6 @@ public class aMerniAtesti extends JInternalFrame implements InternalFrameListene
 		JFormattedTextField txtSluzb = new JFormattedTextField(createFormatter(fmm,3));
 		txtSluzb.setBounds(610,5,150,visina);
 		txtSluzb.setEditable(false);
-		txtSluzb.setText("RS 16-014-1");		
 		mainmain.add(txtSluzb);
 
 		JLabel lblMerOps = new JLabel("Merni opseg: ");
@@ -88,7 +85,6 @@ public class aMerniAtesti extends JInternalFrame implements InternalFrameListene
 		JFormattedTextField txtMerOps = new JFormattedTextField(createFormatter(fmm,3));
 		txtMerOps.setBounds(100,35,150,visina);
 		txtMerOps.setEditable(false);
-		txtMerOps.setText("100g - 15/30 kg");		
 		mainmain.add(txtMerOps);
 
 		JLabel lblKlasTac = new JLabel("Klasa tacnosti: ");
@@ -98,7 +94,6 @@ public class aMerniAtesti extends JInternalFrame implements InternalFrameListene
 		JFormattedTextField txtKlasTac = new JFormattedTextField(createFormatter(fmm,3));
 		txtKlasTac.setBounds(350,35,150,visina);
 		txtKlasTac.setEditable(false);
-		txtKlasTac.setText("III");		
 		mainmain.add(txtKlasTac);
 
 		JLabel lblDatNab = new JLabel("Datum nabavke: ");
@@ -108,7 +103,6 @@ public class aMerniAtesti extends JInternalFrame implements InternalFrameListene
 		JFormattedTextField txtDatNab = new JFormattedTextField(createFormatter(fmm,3));
 		txtDatNab.setBounds(610,35,150,visina);
 		txtDatNab.setEditable(false);
-		txtDatNab.setText("2024");		
 		mainmain.add(txtDatNab);
 
 		JLabel lblPrPreg = new JLabel("Prvi pregled: ");
@@ -118,7 +112,6 @@ public class aMerniAtesti extends JInternalFrame implements InternalFrameListene
 		JFormattedTextField txtPrPreg = new JFormattedTextField(createFormatter(fmm,3));
 		txtPrPreg.setBounds(100,65,150,visina);
 		txtPrPreg.setEditable(false);
-		txtPrPreg.setText("20-07-2024");		
 		mainmain.add(txtPrPreg);
 		
 		JLabel lblPrviPreg = new JLabel("Period pregleda: ");
@@ -128,7 +121,6 @@ public class aMerniAtesti extends JInternalFrame implements InternalFrameListene
 		JFormattedTextField txtPrviPreg = new JFormattedTextField(createFormatter(fmm,3));
 		txtPrviPreg.setBounds(350,65,150,visina);
 		txtPrviPreg.setEditable(false);
-		txtPrviPreg.setText("2 godine");		
 		mainmain.add(txtPrviPreg);
 
 		JLabel lblProiz = new JLabel("Proizvodjac: ");
@@ -138,7 +130,6 @@ public class aMerniAtesti extends JInternalFrame implements InternalFrameListene
 		JFormattedTextField txtProiz = new JFormattedTextField(createFormatter(fmm,3));
 		txtProiz.setBounds(610,65,150,visina);
 		txtProiz.setEditable(false);
-		txtProiz.setText("Birotehna Smederevo");		
 		mainmain.add(txtProiz);
 
 		JLabel lblGodProiz = new JLabel("Godina proizvodnje: ");
@@ -148,7 +139,6 @@ public class aMerniAtesti extends JInternalFrame implements InternalFrameListene
 		JFormattedTextField txtGodProiz = new JFormattedTextField(createFormatter(fmm,3));
 		txtGodProiz.setBounds(100,95,150,visina);
 		txtGodProiz.setEditable(false);
-		txtGodProiz.setText("2024");		
 		mainmain.add(txtGodProiz);
 		
 		JLabel lblSerBr = new JLabel("Serijski broj: ");
@@ -158,8 +148,27 @@ public class aMerniAtesti extends JInternalFrame implements InternalFrameListene
 		JFormattedTextField txtSerBr = new JFormattedTextField(createFormatter(fmm,3));
 		txtSerBr.setBounds(350,95,150,visina);
 		txtSerBr.setEditable(false);
-		txtSerBr.setText("601658-1");		
 		mainmain.add(txtSerBr);
+
+		lblMernoSredstvo = new JLabel("Sifra mernog sredsta: ");
+		lblMernoSredstvo.setBounds(5, 125, 100, visina);
+		mainmain.add(lblMernoSredstvo);
+		txtMernoSredstvo = new JFormattedTextField(createFormatter(fmm,1));
+		//txtMernoSredstvo.setColumns(5);
+		txtMernoSredstvo.setBounds(120, 125, 150, visina);
+		txtMernoSredstvo.addFocusListener(new FL());
+        txtMernoSredstvo.getInputMap().put(KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0),"check");
+		txtMernoSredstvo.getActionMap().put("check", new AbstractAction() {
+        	public void actionPerformed(ActionEvent e) {izbormersred.requestFocus();}});
+		txtMernoSredstvo.getInputMap().put(KeyStroke.getKeyStroke(KeyEvent.VK_F9, 0),"check1");
+        txtMernoSredstvo.getActionMap().put("check1", new AbstractAction() {
+            public void actionPerformed(ActionEvent e) {prikaziMernaSredstva();}});
+
+		mainmain.add(txtMernoSredstvo);
+		izbormersred = new JButton("Izaberi merno sredstvo");
+		izbormersred.setBounds(290, 125, 200, visina);
+		mainmain.add(izbormersred);
+
 
 		//******************************************************************
 
@@ -248,8 +257,13 @@ public class aMerniAtesti extends JInternalFrame implements InternalFrameListene
 		setSize(820,550);
 		centerDialog();
 		UIManager.addPropertyChangeListener(new UISwitchListener(container));
-		t[0].requestFocus();
 
+		SwingUtilities.invokeLater(new Runnable() {
+    		public void run() {
+        txtMernoSredstvo.setSelectionStart(0);
+        txtMernoSredstvo.requestFocusInWindow();
+    }
+});	
     }
 //------------------------------------------------------------------------------------------------------------------
     public void internalFrameClosing(InternalFrameEvent e) {}
@@ -287,7 +301,7 @@ public class aMerniAtesti extends JInternalFrame implements InternalFrameListene
 		
 		String fmm;
 		fmm = "*****";
-        l[0] = new JLabel("\u0160ifra :");
+        l[0] = new JLabel("Redni broj :");
         t[0] = new JFormattedTextField(createFormatter(fmm,1));
 		t[0].setColumns(5);
 		t[0].setSelectionStart(0);
@@ -297,7 +311,7 @@ public class aMerniAtesti extends JInternalFrame implements InternalFrameListene
 
 
 		fmm = "**************************************************";
-		l[1] = new JLabel("Naziv mernog sredstva :");
+		l[1] = new JLabel("Redni broj :");
         t[1] = new JFormattedTextField(createFormatter(fmm,3));
 		t[1].setColumns(22);
 		t[1].addFocusListener(new FL());
@@ -708,6 +722,14 @@ protected MaskFormatter createFormatter(String s, int koji) {
 						unesi.requestFocus();}
 				}
 }
+
+//------------------------------------------------------------------------------------------------------------------
+  public void prikaziMernaSredstva() {
+		int t=1;
+		aMernaSredstvaPrik mvp = new aMernaSredstvaPrik(t);
+		mvp.setModal(true);
+		mvp.setVisible(true);
+  }
 
 //===========================================================================
 class FL implements FocusListener {
