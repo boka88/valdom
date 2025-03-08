@@ -70,6 +70,20 @@ public class aUnosKvarova extends JInternalFrame implements InternalFrameListene
 		tft.setValue(new java.util.Date());
 		date=tft.getText();
 
+		//povecanje fonta za menije i podmenije*******************************
+		Font veciFont = AutoFrame.veciFont; // Promeni velicinu po potrebi
+        UIManager.put("Label.font", veciFont);
+        UIManager.put("FormattedTextField.font", veciFont);
+		UIManager.put("Button.font", veciFont);
+		UIManager.put("TableHeader.font", veciFont);
+		UIManager.put("Table.font", veciFont); //InternalFrame.titleFont
+		UIManager.put("InternalFrame.font", veciFont); //InternalFrame.titleFont
+		UIManager.put("CheckBox.font", veciFont); //InternalFrame.titleFont
+		// Ažuriranje UI nakon promene
+		SwingUtilities.updateComponentTreeUI(this);
+		//********************************************************************
+
+
 		buildTable();
 		main.add(buildPanel(), BorderLayout.CENTER);
 		getContentPane().add(main);
@@ -81,6 +95,8 @@ public class aUnosKvarova extends JInternalFrame implements InternalFrameListene
 		UIManager.addPropertyChangeListener(new UISwitchListener(main));
 		t[0].setSelectionStart(0);
 		t[0].requestFocus();
+
+
     }
 //------------------------------------------------------------------------------------------------------------------
     public void internalFrameClosing(InternalFrameEvent e) {}
@@ -138,9 +154,9 @@ public class aUnosKvarova extends JInternalFrame implements InternalFrameListene
 		fmm = "******";
         l[0] = new JLabel("Nalog br. :");
 			l[0].setBounds(prviLX,aa,sirinaL,visina);
-		l[0].setFont(new Font("Arial",Font.PLAIN,12));
+		//l[0].setFont(new Font("Arial",Font.PLAIN,12));
         t[0] = new JFormattedTextField(createFormatter(fmm,1));
-		t[0].setFont(new Font("Arial",Font.PLAIN,12));
+		//t[0].setFont(new Font("Arial",Font.PLAIN,12));
 			t[0].setBounds(prviTX,aa,10*txt,visina);
 		t[0].setText(String.valueOf(prvisledeci));
 		t[0].setSelectionStart(0);
@@ -153,9 +169,9 @@ public class aUnosKvarova extends JInternalFrame implements InternalFrameListene
 		fmm = "********************";
 		JLabel lblBrdokumenta = new JLabel("Broj dokumenta:");
 			lblBrdokumenta.setBounds(prviLX+420,aa,sirinaL,visina);
-		lblBrdokumenta.setFont(new Font("Arial",Font.PLAIN,12));
+		//lblBrdokumenta.setFont(new Font("Arial",Font.PLAIN,12));
         brDokumenta = new JFormattedTextField(createFormatter(fmm,3));
-		brDokumenta.setFont(new Font("Arial",Font.PLAIN,12));
+		// brDokumenta.setFont(new Font("Arial",Font.PLAIN,12));
 			brDokumenta.setBounds(prviTX+420,aa,12*txt,visina);
 		brDokumenta.setSelectionStart(0);
         brDokumenta.getInputMap().put(KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0),"check");
@@ -165,9 +181,9 @@ public class aUnosKvarova extends JInternalFrame implements InternalFrameListene
 		fmm = "********************";
 		JLabel lblDrugiDokument = new JLabel("Veza sa drugim dok.:");
 			lblDrugiDokument.setBounds(prviLX+420,aa + visina + razmakY,sirinaL+30,visina);
-		lblDrugiDokument.setFont(new Font("Arial",Font.PLAIN,12));
+		// lblDrugiDokument.setFont(new Font("Arial",Font.PLAIN,12));
         txtDrugiDokument = new JFormattedTextField(createFormatter(fmm,3));
-		txtDrugiDokument.setFont(new Font("Arial",Font.PLAIN,12));
+		// txtDrugiDokument.setFont(new Font("Arial",Font.PLAIN,12));
 			txtDrugiDokument.setBounds(prviTX+420,aa + visina + razmakY,12*txt,visina);
 		txtDrugiDokument.setSelectionStart(0);
         txtDrugiDokument.getInputMap().put(KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0),"check");
@@ -177,9 +193,9 @@ public class aUnosKvarova extends JInternalFrame implements InternalFrameListene
 				fmm = "********************";
 		JLabel lblKarticaMasine = new JLabel("Karton ma\u0161ine al.:");
 			lblKarticaMasine.setBounds(prviLX+420,aa + 2*(visina + razmakY),sirinaL+30,visina);
-		lblKarticaMasine.setFont(new Font("Arial",Font.PLAIN,12));
+		// lblKarticaMasine.setFont(new Font("Arial",Font.PLAIN,12));
         txtKartonMasine = new JFormattedTextField(createFormatter(fmm,3));
-		txtKartonMasine.setFont(new Font("Arial",Font.PLAIN,12));
+		//txtKartonMasine.setFont(new Font("Arial",Font.PLAIN,12));
 			txtKartonMasine.setBounds(prviTX+420,aa + + 2*(visina + razmakY),12*txt,visina);
 		txtKartonMasine.setSelectionStart(0);
         txtKartonMasine.getInputMap().put(KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0),"check");
@@ -192,9 +208,9 @@ public class aUnosKvarova extends JInternalFrame implements InternalFrameListene
 		fmm = "##/##/####";
 		l[1] = new JLabel("Datum :");
 			l[1].setBounds(prviLX,aa + visina + razmakY,sirinaL,visina);
-		l[1].setFont(new Font("Arial",Font.PLAIN,12));
+		//l[1].setFont(new Font("Arial",Font.PLAIN,12));
         t[1] = new JFormattedTextField(createFormatter(fmm,4));
-		t[1].setFont(new Font("Arial",Font.PLAIN,12));
+		//t[1].setFont(new Font("Arial",Font.PLAIN,12));
 			t[1].setBounds(prviTX,aa + visina + razmakY,10*txt,visina);
 		t[1].setText(date);
         t[1].getInputMap().put(KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0),"check");
@@ -204,9 +220,9 @@ public class aUnosKvarova extends JInternalFrame implements InternalFrameListene
 		fmm = "*****";
         l[2] = new JLabel("\u0160ifra ma\u0161ine:");
  			l[2].setBounds(prviLX,aa + 2*(visina + razmakY),sirinaL,visina);
-		l[2].setFont(new Font("Arial",Font.PLAIN,12));
+		//l[2].setFont(new Font("Arial",Font.PLAIN,12));
 		t[2] = new JFormattedTextField(createFormatter(fmm,1));
-		t[2].setFont(new Font("Arial",Font.PLAIN,12));
+		//t[2].setFont(new Font("Arial",Font.PLAIN,12));
 			t[2].setBounds(prviTX,aa + 2*(visina + razmakY),10*txt,visina);
 		t[2].setSelectionStart(0);
         t[2].getInputMap().put(KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0),"check");
@@ -220,9 +236,9 @@ public class aUnosKvarova extends JInternalFrame implements InternalFrameListene
         
 		lblRadnik = new JLabel("Radnik-operater :");
  			lblRadnik.setBounds(prviLX,aa + 3*(visina + razmakY),sirinaL,visina);
-		lblRadnik.setFont(new Font("Arial",Font.PLAIN,12));
+		//lblRadnik.setFont(new Font("Arial",Font.PLAIN,12));
 		sifRadnika = new JFormattedTextField(createFormatter(fmm,3));
-		sifRadnika.setFont(new Font("Arial",Font.PLAIN,12));
+		//sifRadnika.setFont(new Font("Arial",Font.PLAIN,12));
 			sifRadnika.setBounds(prviTX,aa + 3*(visina + razmakY),10*txt,visina);
 		sifRadnika.setSelectionStart(0);
         sifRadnika.getInputMap().put(KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0),"check");
@@ -237,9 +253,9 @@ public class aUnosKvarova extends JInternalFrame implements InternalFrameListene
 		fmm = "************";
         l[3] = new JLabel("Cena radova. :");
 			l[3].setBounds(drugiLX,aa,sirinaL,visina);
-		l[3].setFont(new Font("Arial",Font.PLAIN,12));
+		//l[3].setFont(new Font("Arial",Font.PLAIN,12));
         t[3] = new JFormattedTextField(createFormatter(fmm,2));
-		t[3].setFont(new Font("Arial",Font.PLAIN,12));
+		//t[3].setFont(new Font("Arial",Font.PLAIN,12));
 			t[3].setBounds(drugiTX,aa,10*txt,visina);
         t[3].getInputMap().put(KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0),"check");
         t[3].getActionMap().put("check", new AbstractAction() {
@@ -247,9 +263,9 @@ public class aUnosKvarova extends JInternalFrame implements InternalFrameListene
 
 		l[4] = new JLabel("Cena delova :");
 			l[4].setBounds(drugiLX,aa + visina + razmakY,sirinaL,visina);
-		l[4].setFont(new Font("Arial",Font.PLAIN,12));
+		//l[4].setFont(new Font("Arial",Font.PLAIN,12));
         t[4] = new JFormattedTextField(createFormatter(fmm,2));
-		t[4].setFont(new Font("Arial",Font.PLAIN,12));
+		//t[4].setFont(new Font("Arial",Font.PLAIN,12));
 			t[4].setBounds(drugiTX,aa + visina + razmakY,10*txt,visina);
         t[4].getInputMap().put(KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0),"check");
         t[4].getActionMap().put("check", new AbstractAction() {
@@ -258,9 +274,9 @@ public class aUnosKvarova extends JInternalFrame implements InternalFrameListene
 		fmm = "*************";
 		l[5] = new JLabel("Garancija :");
 			l[5].setBounds(drugiLX,aa + 2*(visina + razmakY),sirinaL,visina);
-		l[5].setFont(new Font("Arial",Font.PLAIN,12));
+		//l[5].setFont(new Font("Arial",Font.PLAIN,12));
         t[5] = new JFormattedTextField(createFormatter(fmm,3));
-		t[5].setFont(new Font("Arial",Font.PLAIN,12));
+		//t[5].setFont(new Font("Arial",Font.PLAIN,12));
 			t[5].setBounds(drugiTX,aa + 2*(visina + razmakY),10*txt,visina);
         t[5].getInputMap().put(KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0),"check");
         t[5].getActionMap().put("check", new AbstractAction() {
@@ -269,9 +285,9 @@ public class aUnosKvarova extends JInternalFrame implements InternalFrameListene
 		fmm = "********";
 		l[6] = new JLabel("Rabat (%) :");
 			l[6].setBounds(drugiLX,aa + 3*(visina + razmakY),sirinaL,visina);
-		l[6].setFont(new Font("Arial",Font.PLAIN,12));
+		//l[6].setFont(new Font("Arial",Font.PLAIN,12));
         t[6] = new JFormattedTextField(createFormatter(fmm,2));
-		t[6].setFont(new Font("Arial",Font.PLAIN,12));
+		//t[6].setFont(new Font("Arial",Font.PLAIN,12));
 			t[6].setBounds(drugiTX,aa + 3*(visina + razmakY),10*txt,visina);
         t[6].getInputMap().put(KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0),"check");
         t[6].getActionMap().put("check", new AbstractAction() {
@@ -279,10 +295,10 @@ public class aUnosKvarova extends JInternalFrame implements InternalFrameListene
 		//********************************************************************************
 
 		JLabel zag = new JLabel("Opis kvara :");
-		zag.setFont(new Font("Arial",Font.PLAIN,12));
+		//zag.setFont(new Font("Arial",Font.PLAIN,12));
 		zag.setBounds(prviLX,aa + 3*(visina + razmakY) + 30,sirinaL,visina);
 		zaglavlje = new JTextArea();
-		zaglavlje.setFont(new Font("Arial",Font.PLAIN,12));
+		//zaglavlje.setFont(new Font("Arial",Font.PLAIN,12));
 		zaglavlje.setRows(2);
 		zaglavlje.setWrapStyleWord(true);
 		zaglavlje.setLineWrap(true);
@@ -295,12 +311,12 @@ public class aUnosKvarova extends JInternalFrame implements InternalFrameListene
 
 
 		JLabel pod = new JLabel("Opis radova :");
-		pod.setFont(new Font("Arial",Font.PLAIN,12));
+		//pod.setFont(new Font("Arial",Font.PLAIN,12));
 		pod.setBounds(prviLX,aa + 4*(visina + razmakY) + 55,sirinaL,visina);
 		podnozje = new JTextArea();
 		podnozje.setRows(4);
 		podnozje.setWrapStyleWord(true);
-		podnozje.setFont(new Font("Arial",Font.PLAIN,12));
+		//podnozje.setFont(new Font("Arial",Font.PLAIN,12));
 		podnozje.setLineWrap(true);
 		podnozje.getInputMap().put(KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0),"check");
         podnozje.getActionMap().put("check", new AbstractAction() {
@@ -311,10 +327,10 @@ public class aUnosKvarova extends JInternalFrame implements InternalFrameListene
 		
 		fmm = "******************************";
 		JLabel lblRadio = new JLabel("Lica zad.za int.:");
-		lblRadio.setFont(new Font("Arial",Font.PLAIN,12));
+		//lblRadio.setFont(new Font("Arial",Font.PLAIN,12));
 		lblRadio.setBounds(prviLX,aa + 6*(visina + razmakY) + 80,sirinaL + 10,visina);
         txtRadio = new JFormattedTextField(createFormatter(fmm,3));
-		txtRadio.setFont(new Font("Arial",Font.PLAIN,12));
+		//txtRadio.setFont(new Font("Arial",Font.PLAIN,12));
 			txtRadio.setBounds(prviTX,aa + 6*(visina + razmakY) + 80,20*txt,visina);
         txtRadio.getInputMap().put(KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0),"check");
         txtRadio.getActionMap().put("check", new AbstractAction() {
@@ -322,10 +338,10 @@ public class aUnosKvarova extends JInternalFrame implements InternalFrameListene
 
 		fmm = "##/##/####";
 		JLabel lblDatumrada = new JLabel("Datum rada:");
-		lblDatumrada.setFont(new Font("Arial",Font.PLAIN,12));
+		//lblDatumrada.setFont(new Font("Arial",Font.PLAIN,12));
 		lblDatumrada.setBounds(prviLX+420,aa + 6*(visina + razmakY) + 80,sirinaL + 10,visina);
         txtDatumrada = new JFormattedTextField(createFormatter(fmm,3));
-		txtDatumrada.setFont(new Font("Arial",Font.PLAIN,12));
+		//txtDatumrada.setFont(new Font("Arial",Font.PLAIN,12));
 			txtDatumrada.setBounds(prviTX+420,aa + 6*(visina + razmakY) + 80,10*txt,visina);
         txtDatumrada.getInputMap().put(KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0),"check");
         txtDatumrada.getActionMap().put("check", new AbstractAction() {
@@ -333,7 +349,7 @@ public class aUnosKvarova extends JInternalFrame implements InternalFrameListene
 
 		
 		JLabel pod1 = new JLabel("Ugra\u0111eni delovi :");
-		pod1.setFont(new Font("Arial",Font.PLAIN,12));
+		//pod1.setFont(new Font("Arial",Font.PLAIN,12));
 		pod1.setBounds(prviLX,aa + 6*(visina + razmakY) + 110,sirinaL + 10,visina);
 		/*
 		delovi = new JTextArea();
@@ -354,9 +370,9 @@ public class aUnosKvarova extends JInternalFrame implements InternalFrameListene
 		fmm = "******************************";
 		JLabel lblKontrolisao = new JLabel("Kontrolisao :");
 			lblKontrolisao.setBounds(prviLX,aa + 6*(visina + razmakY) + 270,sirinaL,visina);
-		lblKontrolisao.setFont(new Font("Arial",Font.PLAIN,12));
+		//lblKontrolisao.setFont(new Font("Arial",Font.PLAIN,12));
         txtKontrolisao = new JFormattedTextField(createFormatter(fmm,3));
-		txtKontrolisao.setFont(new Font("Arial",Font.PLAIN,12));
+		//txtKontrolisao.setFont(new Font("Arial",Font.PLAIN,12));
 			txtKontrolisao.setBounds(prviTX,aa + 6*(visina + razmakY)+270,15*txt,visina);
         txtKontrolisao.getInputMap().put(KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0),"check");
         txtKontrolisao.getActionMap().put("check", new AbstractAction() {
@@ -365,12 +381,12 @@ public class aUnosKvarova extends JInternalFrame implements InternalFrameListene
 
 
 		JLabel pod2 = new JLabel("Preventivne mere :");
-		pod2.setFont(new Font("Arial",Font.PLAIN,12));
+		//pod2.setFont(new Font("Arial",Font.PLAIN,12));
 		pod2.setBounds(prviLX,aa + 7*(visina + razmakY) + 270,sirinaL+20,visina);
 		napomena = new JTextArea();
 		napomena.setRows(2);
 		napomena.setWrapStyleWord(true);
-		napomena.setFont(new Font("Arial",Font.PLAIN,12));
+		//napomena.setFont(new Font("Arial",Font.PLAIN,12));
 		napomena.setLineWrap(true);
 		napomena.getInputMap().put(KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0),"check");
         napomena.getActionMap().put("check", new AbstractAction() {
@@ -381,18 +397,18 @@ public class aUnosKvarova extends JInternalFrame implements InternalFrameListene
 		//naziv vlasnika vozila
 		l[7] = new JLabel("");
 			l[7].setBounds(prviTX + 10*txt +5,aa,120,visina);
-		l[7].setFont(new Font("Arial",Font.PLAIN,12));
+		//l[7].setFont(new Font("Arial",Font.PLAIN,12));
 		l[7].setForeground(Color.blue);
 
 		//ime masine
         lblMasinaPrik = new JLabel("");
  			lblMasinaPrik.setBounds(prviTX + 10*txt +5,aa + 2*(visina + razmakY),150,visina);
-		lblMasinaPrik.setFont(new Font("Arial",Font.BOLD,12));
+		//lblMasinaPrik.setFont(new Font("Arial",Font.BOLD,12));
 
 		//ime radnika
         lblRadnikPrik = new JLabel("");
  			lblRadnikPrik.setBounds(prviTX + 10*txt +5,aa + 3*(visina + razmakY),120,visina);
-		lblRadnikPrik.setFont(new Font("Arial",Font.BOLD,12));
+		//lblRadnikPrik.setFont(new Font("Arial",Font.BOLD,12));
 
 		novi = new JButton("Novi");
 		novi.setMnemonic('N');
@@ -453,7 +469,7 @@ public class aUnosKvarova extends JInternalFrame implements InternalFrameListene
 				   Izlaz(); }});
 
 		JLabel lblCheck1 = new JLabel("Ma\u0161ina:");
-		lblCheck1.setFont(new Font("Arial",Font.PLAIN,12));
+		//lblCheck1.setFont(new Font("Arial",Font.PLAIN,12));
 		lblCheck1.setBounds(prviLX+420,aa + 3*(visina + razmakY),50,visina);
 		check1 = new JCheckBox("   ",false);
 		check1.setBounds(prviLX+460,aa + 3*(visina + razmakY),30,20);
@@ -463,7 +479,7 @@ public class aUnosKvarova extends JInternalFrame implements InternalFrameListene
             public void actionPerformed(ActionEvent e) {AkcijaC(check1);}});
 
 		JLabel lblCheck2 = new JLabel("Alat :");
-		lblCheck2.setFont(new Font("Arial",Font.PLAIN,12));
+		//lblCheck2.setFont(new Font("Arial",Font.PLAIN,12));
 		lblCheck2.setBounds(prviLX+540,aa + 3*(visina + razmakY),30,visina);
 		check2 = new JCheckBox("   ",false);
 		check2.setBounds(prviLX+575,aa + 3*(visina + razmakY),30,20);

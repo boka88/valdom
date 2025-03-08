@@ -21,7 +21,7 @@ import java.beans.PropertyVetoException.*;
   * This is the main container frame for the Fin app
   *
   * @version 1.0
-  * @author Nenad Ivanisevic
+  * @author Boris Ivanisevic
   */
 public class AutoFrame extends JFrame {
 
@@ -32,7 +32,7 @@ public class AutoFrame extends JFrame {
     JInternalFrame toolPalette;
     JCheckBoxMenuItem showToolPaletteMenuItem;
     //public ConnMySQL connection;     
-	public Font veciFont = new Font("Arial", Font.PLAIN, 14); // Primer sa vecim fontom
+	public static Font veciFont = new Font("Arial", Font.PLAIN, 18); // Primer sa vecim fontom
     static final Integer DOCLAYER = new Integer(5);
     static final Integer TOOLLAYER = new Integer(6);
     static final Integer HELPLAYER = new Integer(7);
@@ -41,6 +41,7 @@ public class AutoFrame extends JFrame {
     static final String PORUKA = "Ne mo\u017ee se ostvariti konekcija"; 
     static final String PRINTT = "\u0160tampa u Javi"; 
 	private classBekap classbekap = null;
+
 
 //--------------------------------------------------------------------------------------------
 	public AutoFrame() {

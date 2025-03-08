@@ -39,7 +39,7 @@ public class aMasine extends JInternalFrame implements InternalFrameListener
 //------------------------------------------------------------------------------------------------------------------
     public aMasine() {
 		super("", true, true, true, true);
-        setTitle("Šifarnik ma\u0161ina");
+        setTitle("ï¿½ifarnik ma\u0161ina");
 		setMaximizable(false);
 		setResizable(false);
         setDefaultCloseOperation(WindowConstants.HIDE_ON_CLOSE);
@@ -84,21 +84,21 @@ public class aMasine extends JInternalFrame implements InternalFrameListener
 				   UpdateRecord(); }});
 		buttonPanel.add( izmeni );
 
-		JButton brisi = new JButton("Briši slog");
+		JButton brisi = new JButton("Briï¿½i slog");
 		brisi.setMnemonic('B');
 		brisi.addActionListener(new ActionListener() {
 	               public void actionPerformed(ActionEvent e) {
 				   DeleteRecord(); }});
 		buttonPanel.add( brisi );
 
-		JButton trazi = new JButton("Traži");
+		JButton trazi = new JButton("Traï¿½i");
 		trazi.setMnemonic('T');
 		trazi.addActionListener(new ActionListener() {
 	               public void actionPerformed(ActionEvent e) {
 				   TraziRecord(); }});
 		buttonPanel.add( trazi );
 
-		JButton stampa = new JButton("Štampa spisak");
+		JButton stampa = new JButton("ï¿½tampa spisak");
 		stampa.setMnemonic('P');
 		stampa.addActionListener(new ActionListener() {
 	               public void actionPerformed(ActionEvent e) {
@@ -115,6 +115,18 @@ public class aMasine extends JInternalFrame implements InternalFrameListener
 		pPre = "1";
 		uzmiKonekciju();
 
+		//povecanje fonta za menije i podmenije*******************************
+		Font veciFont = AutoFrame.veciFont; // Promeni velicinu po potrebi
+        UIManager.put("Label.font", veciFont);
+        UIManager.put("FormattedTextField.font", veciFont);
+		UIManager.put("Button.font", veciFont);
+		UIManager.put("TableHeader.font", veciFont);
+		UIManager.put("Table.font", veciFont); //InternalFrame.titleFont
+		UIManager.put("InternalFrame.font", veciFont); //InternalFrame.titleFont
+		// AÅ¾uriranje UI nakon promene
+		SwingUtilities.updateComponentTreeUI(this);
+		//********************************************************************
+
 		container.add(buildFilterPanel());
 		glavni.add(container);
 		glavni.add(buildTable());
@@ -122,9 +134,10 @@ public class aMasine extends JInternalFrame implements InternalFrameListener
 		main.add(buttonPanel, BorderLayout.SOUTH);
 		getContentPane().add(main);
 		pack();
-		setSize(820,350);
+		setSize(1100,550);
 		centerDialog();
 		UIManager.addPropertyChangeListener(new UISwitchListener(container));
+
 
     }
 //------------------------------------------------------------------------------------------------------------------
