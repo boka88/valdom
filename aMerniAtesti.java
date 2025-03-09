@@ -33,7 +33,7 @@ public class aMerniAtesti extends JInternalFrame implements InternalFrameListene
 	private JButton novi,unesi,izmeni, izbormersred;
 	private ConnMySQL dbconn;
 	private Connection connection = null;
-    public static JFormattedTextField t[],mmoj,txtNaziv,txtMernoSredstvo;
+    public static JFormattedTextField t[],mmoj, txtMernoSredstvo, txtNaziv, txtSluzb, txtMerOps;
    	private JLabel  l[], lblMernoSredstvo;
    	int n_fields;
 //------------------------------------------------------------------------------------------------------------------
@@ -73,7 +73,7 @@ public class aMerniAtesti extends JInternalFrame implements InternalFrameListene
 		lblSluzbOzn.setBounds(510,5,100,visina);
 		mainmain.add(lblSluzbOzn);
 		fmm = "**************************************";
-		JFormattedTextField txtSluzb = new JFormattedTextField(createFormatter(fmm,3));
+		txtSluzb = new JFormattedTextField(createFormatter(fmm,3));
 		txtSluzb.setBounds(610,5,150,visina);
 		txtSluzb.setEditable(false);
 		mainmain.add(txtSluzb);
@@ -82,7 +82,7 @@ public class aMerniAtesti extends JInternalFrame implements InternalFrameListene
 		lblMerOps.setBounds(5,35,100,visina);
 		mainmain.add(lblMerOps);
 		fmm = "**************************************";
-		JFormattedTextField txtMerOps = new JFormattedTextField(createFormatter(fmm,3));
+		txtMerOps = new JFormattedTextField(createFormatter(fmm,3));
 		txtMerOps.setBounds(100,35,150,visina);
 		txtMerOps.setEditable(false);
 		mainmain.add(txtMerOps);
@@ -167,6 +167,14 @@ public class aMerniAtesti extends JInternalFrame implements InternalFrameListene
 		mainmain.add(txtMernoSredstvo);
 		izbormersred = new JButton("Izaberi merno sredstvo");
 		izbormersred.setBounds(290, 125, 200, visina);
+		izbormersred.addActionListener(new ActionListener() {
+	               public void actionPerformed(ActionEvent e) {
+				   ProveraMernogSredstva(); }});
+        izbormersred.getInputMap().put(KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0),"check");
+        izbormersred.getActionMap().put("check", new AbstractAction() {
+            public void actionPerformed(ActionEvent e) {ProveraMernogSredstva();}});
+
+
 		mainmain.add(izbormersred);
 
 
@@ -629,6 +637,78 @@ protected MaskFormatter createFormatter(String s, int koji) {
 					JOptionPane.showMessageDialog(null, "Nije uspeo da zatvori statement");}}
 		}
   }
+
+//------------------------------------------------------------------------------------------------------------------
+	public void ProveraMernogSredstva() {
+ 
+	  Statement statement = null;
+
+		 if ( !txtMernoSredstvo.getText().trim().equals( "" )) {
+
+			try {
+				statement = connection.createStatement();
+
+				String query = "SELECT * FROM mernasredstva WHERE rbr=" + txtMernoSredstvo.getText().trim();
+
+		         ResultSet rs = statement.executeQuery( query );
+		         if(rs.next()){
+		         	txtNaziv.setText(rs.getString("nazmerila"));
+		         	txtSluzb.setText(rs.getString("oznaka"));
+					txtMerOps.setText(rs.getString("tip"));
+					rs.close();
+					TraziSledeciRedniBroj();
+				} else {
+					JOptionPane.showMessageDialog(this, "Ne postoji merno sredstvo u sifarniku!");
+					txtMernoSredstvo.requestFocus();
+				}
+			}catch ( SQLException sqlex ) {
+						JOptionPane.showMessageDialog(this, "Greska u FindRecord:" + sqlex);
+			}
+				finally{
+						if (statement != null){
+							try{
+								statement.close();
+								statement = null;
+							}catch (Exception e){
+								JOptionPane.showMessageDialog(null, "Nije uspeo da zatvori statement");}}
+					}
+		}else {
+			JOptionPane.showMessageDialog(this, "Merno sredstvo nije uneto.");
+			txtMernoSredstvo.requestFocus();
+		}					
+  }
+//----------------------------------------------------------------------------------------------------------------- 
+	private void TraziSledeciRedniBroj(){
+	  int redniBroj = 1;
+	  Statement statement = null;
+
+			try {
+				statement = connection.createStatement();
+
+				String query = "SELECT MAX(rbr) FROM atesti WHERE sifmas=" + txtMernoSredstvo.getText().trim();
+
+		         ResultSet rs = statement.executeQuery( query );
+		         if(rs.next()){
+					redniBroj = rs.getInt("MAX(rbr)") + 1;
+					rs.close();
+				} 
+
+				t[0].setText(String.valueOf(redniBroj));
+				String sql = "SELECT * from atesti WHERE sifmas=" + txtMernoSredstvo.getText().trim() + " ORDER BY rbr DESC";
+				popuniTabelu(sql);
+
+			} catch ( SQLException sqlex ) {
+						JOptionPane.showMessageDialog(this, "Greska u FindRecord:" + sqlex);
+			}
+				finally{
+						if (statement != null){
+							try{
+								statement.close();
+								statement = null;
+							}catch (Exception e){
+								JOptionPane.showMessageDialog(null, "Nije uspeo da zatvori statement");}}
+				}
+	}
 //------------------------------------------------------------------------------------------------------------------
 	private void TraziRecord(){
         String result = JOptionPane.showInputDialog(this, "Unesi naziv ili deo naziva masine");
@@ -660,7 +740,7 @@ protected MaskFormatter createFormatter(String s, int koji) {
 
 	   	qtbl = new mQTM4(connection);
 		String sql;
-		sql = "SELECT * FROM atesti order by sifmas" ;
+		sql = "SELECT * FROM atesti WHERE rbr=99999" ;
 	   	qtbl.query(sql);
  	   	jtbl = new JTable( qtbl );
 		jtbl.addMouseListener(new ML());
