@@ -724,7 +724,7 @@ class MCLVozila implements LayoutManager {
 	  children[i].setLocation( xInset + insets.left, height + 5);
 	//pozicija za txt
 	  children[i + 1].setSize(compSize1.width, compSize1.height);
-	  children[i + 1].setLocation( xInset + insets.left + 120, height);
+	  children[i + 1].setLocation( xInset + insets.left + 180, height);
 	  height += compSize.height + yGap;
       }
   }
