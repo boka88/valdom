@@ -30,7 +30,7 @@ public class aMerniAtesti extends JInternalFrame implements InternalFrameListene
 	private String koji;
 	private MaskFormatter fmt = null;
 	private String pPre,nazivPre;
-	private JButton novi,unesi,izmeni, izbormersred;
+	private JButton novi,unesi,izmeni,izbormersred,novinovi;
 	private ConnMySQL dbconn;
 	private Connection connection = null;
     public static JFormattedTextField t[],mmoj, txtMernoSredstvo, txtNaziv, txtSluzb, txtMerOps;
@@ -193,6 +193,22 @@ public class aMerniAtesti extends JInternalFrame implements InternalFrameListene
 		JPanel buttonPanel = new JPanel();
 		buttonPanel.setLayout ( new FlowLayout(FlowLayout.LEFT) );
 
+
+		novinovi = new JButton("Novi Atest");
+		novinovi.setMnemonic('A');
+		novinovi.addActionListener(new ActionListener() {
+	               public void actionPerformed(ActionEvent e) {
+				   NoviNovi(); }});
+		buttonPanel.add( novinovi );
+
+		
+		novi = new JButton("Novi slog");
+		novi.setMnemonic('N');
+		novi.addActionListener(new ActionListener() {
+	               public void actionPerformed(ActionEvent e) {
+				   NoviPressed(); }});
+		buttonPanel.add( novi );
+
 		unesi = new JButton("Unesi");
 		unesi.setMnemonic('U');
         unesi.getInputMap().put(KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0),"check");
@@ -203,12 +219,6 @@ public class aMerniAtesti extends JInternalFrame implements InternalFrameListene
 				   UnesiPressed(); }});
 		buttonPanel.add( unesi );
 
-		JButton novi = new JButton("Novi slog");
-		novi.setMnemonic('N');
-		novi.addActionListener(new ActionListener() {
-	               public void actionPerformed(ActionEvent e) {
-				   NoviPressed(); }});
-		buttonPanel.add( novi );
 
 		izmeni = new JButton("Izmeni");
 		izmeni.setMnemonic('I');
@@ -232,9 +242,9 @@ public class aMerniAtesti extends JInternalFrame implements InternalFrameListene
 		trazi.addActionListener(new ActionListener() {
 	               public void actionPerformed(ActionEvent e) {
 				   TraziRecord(); }});
-		buttonPanel.add( trazi );
+		//buttonPanel.add( trazi );
 
-		JButton stampa = new JButton("?tampa spisak");
+		JButton stampa = new JButton("?tampa karton");
 		stampa.setMnemonic('P');
 		stampa.addActionListener(new ActionListener() {
 	               public void actionPerformed(ActionEvent e) {
@@ -318,31 +328,33 @@ public class aMerniAtesti extends JInternalFrame implements InternalFrameListene
             public void actionPerformed(ActionEvent e) {Akcija(t[0]);}});
 
 
-		fmm = "**************************************************";
-		l[1] = new JLabel("Redni broj :");
-        t[1] = new JFormattedTextField(createFormatter(fmm,3));
-		t[1].setColumns(22);
+		fmm = "##/##/####";
+		l[1] = new JLabel("Servisni datum :");
+        t[1] = new JFormattedTextField(createFormatter(fmm,4));
+		t[1].setColumns(10);
 		t[1].addFocusListener(new FL());
         t[1].getInputMap().put(KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0),"check");
         t[1].getActionMap().put("check", new AbstractAction() {
             public void actionPerformed(ActionEvent e) {Akcija(t[1]);}});
 
-		l[2] = new JLabel("Servisni datum :");
+		l[2] = new JLabel("Vazi do :");
         t[2] = new JFormattedTextField(createFormatter(fmm,4));
-		t[2].setColumns(22);
+		t[2].setColumns(10);
         t[2].getInputMap().put(KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0),"check");
         t[2].getActionMap().put("check", new AbstractAction() {
             public void actionPerformed(ActionEvent e) {Akcija(t[2]);}});
 
-		l[3] = new JLabel("Vazi do :");
-        t[3] = new JFormattedTextField(createFormatter(fmm,4));
+		fmm = "******************************";
+		l[3] = new JLabel("Zapisnik broj :");
+        t[3] = new JFormattedTextField(createFormatter(fmm,3));
 		t[3].setColumns(22);
 		t[3].addFocusListener(new FL());
         t[3].getInputMap().put(KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0),"check");
         t[3].getActionMap().put("check", new AbstractAction() {
             public void actionPerformed(ActionEvent e) {Akcija(t[3]);}});
 
-		l[4] = new JLabel("Zapisnik broj :");
+		fmm = "**************************************************************";
+		l[4] = new JLabel("Opis :");
         t[4] = new JFormattedTextField(createFormatter(fmm,3));
 		t[4].setColumns(22);
 		t[4].addFocusListener(new FL());
@@ -351,7 +363,7 @@ public class aMerniAtesti extends JInternalFrame implements InternalFrameListene
             public void actionPerformed(ActionEvent e) {Akcija(t[4]);}});
 
 		//l[5] = new JLabel("Proizvo\u0111a\u010d :");
-		l[5] = new JLabel("Opis :");
+		l[5] = new JLabel("Predlog za rashod :");
         t[5] = new JFormattedTextField(createFormatter(fmm,3));
 		t[5].setColumns(22);
 		t[5].addFocusListener(new FL());
@@ -359,7 +371,7 @@ public class aMerniAtesti extends JInternalFrame implements InternalFrameListene
         t[5].getActionMap().put("check", new AbstractAction() {
             public void actionPerformed(ActionEvent e) {Akcija(t[5]);}});
 
-		l[6] = new JLabel("Predlog za rashod :");
+		l[6] = new JLabel("Uzrok :");
         t[6] = new JFormattedTextField(createFormatter(fmm,3));
 		t[6].setColumns(22);
 		t[6].addFocusListener(new FL());
@@ -367,15 +379,16 @@ public class aMerniAtesti extends JInternalFrame implements InternalFrameListene
         t[6].getActionMap().put("check", new AbstractAction() {
             public void actionPerformed(ActionEvent e) {Akcija(t[6]);}});
 
-		fmm = "**********";
-		l[7] = new JLabel("Uzrok :");
-        t[7] = new JFormattedTextField(createFormatter(fmm,3));
-		t[7].setColumns(22);
+		fmm = "##/##/####";
+		l[7] = new JLabel("Datum rashoda :");
+        t[7] = new JFormattedTextField(createFormatter(fmm,4));
+		t[7].setColumns(10);
 		t[7].addFocusListener(new FL());
         t[7].getInputMap().put(KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0),"check");
         t[7].getActionMap().put("check", new AbstractAction() {
             public void actionPerformed(ActionEvent e) {Akcija(t[7]);}});
 
+		fmm = "**************************************************************";
 		l[8] = new JLabel("Napomena :");
         t[8] = new JFormattedTextField(createFormatter(fmm,3));
 		t[8].setColumns(22);
@@ -387,6 +400,8 @@ public class aMerniAtesti extends JInternalFrame implements InternalFrameListene
 
 
 	    for(i=0;i<n_fields;i++){ 
+			l[i].setFont(new Font("Arial",Font.PLAIN,ConnMySQL.lblfont));
+			t[i].setFont(new Font("Arial",Font.PLAIN,ConnMySQL.txtfont));
             p.add(l[i]); 
             p.add(t[i]); 
 		}
@@ -435,6 +450,24 @@ protected MaskFormatter createFormatter(String s, int koji) {
 		this.setLocation(0,0);
     }
 //------------------------------------------------------------------------------------------------------------------
+    public void NoviNovi() {
+        int i;
+        n_fields = 9; 
+        for(i=0;i<n_fields;i++){
+            t[i].setText("");
+            t[i].setValue(null);
+		}
+		izmena = false;
+		txtMernoSredstvo.setText("");
+		txtNaziv.setText("");
+		txtSluzb.setText("");
+		txtMerOps.setText("");
+		String sql = "SELECT * FROM atesti WHERE rbr=99999";
+		popuniTabelu(sql);
+		txtMernoSredstvo.setSelectionStart(0);
+		txtMernoSredstvo.requestFocus();
+    }
+//------------------------------------------------------------------------------------------------------------------
     public void NoviPressed() {
         int i;
         n_fields = 9; 
@@ -443,6 +476,7 @@ protected MaskFormatter createFormatter(String s, int koji) {
             t[i].setValue(null);
 		}
 		izmena = false;
+		TraziSledeciRedniBroj();
 		t[0].setSelectionStart(0);
 		t[0].requestFocus();
     }
@@ -452,8 +486,13 @@ protected MaskFormatter createFormatter(String s, int koji) {
     }
 //------------------------------------------------------------------------------------------------------------------
     public void Stampa() {
+		 if (txtMernoSredstvo.getText().trim().length() != 0 ) {
 
-		jPrintSpisakMasina jpm = new jPrintSpisakMasina(connection);
+			jPrintKartonMS jpm = new jPrintKartonMS(connection,txtMernoSredstvo.getText().trim());
+		}else {
+				JOptionPane.showMessageDialog(this, "Nije uneto merno sredstvo");
+				txtMernoSredstvo.requestFocus();
+        }
 	
 	}
 //------------------------------------------------------------------------------------------------------------------
@@ -474,17 +513,18 @@ protected MaskFormatter createFormatter(String s, int koji) {
 	  Statement statement = null;
       try {
          statement = connection.createStatement();
-		 if ( t[0].getText().trim().length() != 0 && t[1].getText().trim().length() != 0 ) {
-            String query = "INSERT INTO masine (sifra,naziv,tip,fabbroj,invbroj,proizvodjac,godizrade,karton,napomena)" +
+		 if ( t[0].getText().trim().length() != 0 && txtMernoSredstvo.getText().trim().length() != 0 ) {
+            String query = "INSERT INTO atesti (rbr,sifmas,servdatum,vazido,zapbr,opis,predrash,uzrok,datrash,napomena)" +
 				" VALUES(" +
-				Integer.parseInt(t[0].getText().trim()) + ",'" +
-				t[1].getText() + "','" + 
-				t[2].getText().trim() + "','" +  
+				Integer.parseInt(t[0].getText().trim()) + "," +
+				txtMernoSredstvo.getText().trim() + ",'" +
+				konvertujDatum(t[1].getText().trim()) + "','" +  
+				konvertujDatum(t[2].getText().trim()) + "','" +  
 				t[3].getText().trim() + "','" +  
 				t[4].getText().trim() + "','" +  
 				t[5].getText().trim() + "','" +  
 				t[6].getText().trim() + "','" +  
-				t[7].getText().trim() + "','" +  
+				konvertujDatum(t[7].getText().trim()) + "','" +  
 				t[8].getText().trim() + "')";			
 			
 			int result = statement.executeUpdate( query );
@@ -492,7 +532,8 @@ protected MaskFormatter createFormatter(String s, int koji) {
 			if ( result == 1 ){
 				//JOptionPane.showMessageDialog(this, "Slog je unet");
 
-				String upit = "SELECT * FROM masine order by sifra";
+				String upit = "SELECT * FROM atesti WHERE sifmas=" + txtMernoSredstvo.getText().trim() + 
+					" order by rbr DESC";
 				popuniTabelu(upit);
 				NoviPressed();
 			}else {
@@ -524,22 +565,23 @@ protected MaskFormatter createFormatter(String s, int koji) {
       try {
          statement = connection.createStatement();
 
-		 if ( !t[0].getText().equals( "" )) {
-               String query = "UPDATE masine SET " +
-				"naziv='" + t[1].getText()+ "'," +
-			    "tip='" + t[2].getText().trim() + "'," + 
-			    "fabbroj='" + t[3].getText().trim() + "'," + 
-			    "invbroj='" + t[4].getText().trim() + "'," + 
-			    "proizvodjac='" + t[5].getText().trim() + "'," + 
-			    "godizrade='" + t[6].getText().trim() + "'," + 
-			    "karton='" + t[7].getText().trim() + "'," + 
+		 if ( t[0].getText().trim().length() != 0 && txtMernoSredstvo.getText().trim().length() != 0 ) {
+               String query = "UPDATE atesti SET " + //,servdatum,vazido,zapbr,opis,predrash,uzrok,datrash,napomena
+				"servdatum='" + konvertujDatum(t[1].getText()) + "'," +
+			    "vazido='" + konvertujDatum(t[2].getText().trim()) + "'," + 
+			    "zapbr='" + t[3].getText().trim() + "'," + 
+			    "opis='" + t[4].getText().trim() + "'," + 
+			    "predrash='" + t[5].getText().trim() + "'," + 
+			    "uzrok='" + t[6].getText().trim() + "'," + 
+			    "datrash='" + konvertujDatum(t[7].getText().trim()) + "'," + 
 			    "napomena='" + t[8].getText() + "'" +
-				" WHERE sifra=" + Integer.parseInt(t[0].getText().trim());
+				" WHERE rbr=" + Integer.parseInt(t[0].getText().trim()) +
+					 " AND sifmas=" + txtMernoSredstvo.getText().trim();
 
 			   int result = statement.executeUpdate( query );
                if ( result == 1 ){
-					String upit = "SELECT * FROM masine order by sifra";
-					popuniTabelu(upit);
+					String upit = "SELECT * FROM atesti WHERE sifmas=" + txtMernoSredstvo.getText().trim() + 
+					" order by rbr DESC";
 					NoviPressed();
 				}else {
 					JOptionPane.showMessageDialog(this, "Slog nije izmenjen");
@@ -568,14 +610,15 @@ protected MaskFormatter createFormatter(String s, int koji) {
 	  Statement statement = null;
       try {
          statement = connection.createStatement();
-         if ( !t[0].getText().equals( "" ) ) {
-               	String query = "DELETE FROM masine WHERE sifra=" + 
-						Integer.parseInt(t[0].getText().trim());
+		 if ( t[0].getText().trim().length() != 0 && txtMernoSredstvo.getText().trim().length() != 0 ) {
+               	String query = "DELETE FROM atesti WHERE rbr=" + 
+						Integer.parseInt(t[0].getText().trim()) + " AND sifmas=" + txtMernoSredstvo.getText().trim();
 
                	int rs = statement.executeUpdate( query );
                	if ( rs != 0 ){
-					JOptionPane.showMessageDialog(this, "Slog je izbrisan");
-					String upit = "SELECT * FROM masine Where pre=" + Integer.parseInt(pPre) + " order by sifra";
+					//JOptionPane.showMessageDialog(this, "Slog je izbrisan");
+					String upit = "SELECT * FROM atesti WHERE sifmas=" + txtMernoSredstvo.getText().trim() + 
+					" order by rbr DESC";
 					popuniTabelu(upit);
 					NoviPressed();
 				}//end if(mBrisi...........................
@@ -604,18 +647,19 @@ protected MaskFormatter createFormatter(String s, int koji) {
          statement = connection.createStatement();
 
 		 if ( !t[0].getText().equals( "" )) {
-			String query = "SELECT * FROM masine WHERE sifra=" + koji;
+			String query = "SELECT * FROM atesti WHERE rbr=" + koji +
+				" AND sifmas=" + txtMernoSredstvo.getText().trim();
 
 		         ResultSet rs = statement.executeQuery( query );
 		         if(rs.next()){
-		         	t[0].setText(rs.getString("sifra"));
-		         	t[1].setText(rs.getString("naziv"));
-					t[2].setText(rs.getString("tip"));
-					t[3].setText(rs.getString("fabbroj"));
-					t[4].setText(rs.getString("invbroj"));
-					t[5].setText(rs.getString("proizvodjac"));
-					t[6].setText(rs.getString("godizrade"));
-					t[7].setText(rs.getString("karton"));
+		         	t[0].setText(rs.getString("rbr"));
+		         	t[1].setText(konvertujDatumIzPodataka(rs.getString("servdatum")));
+					t[2].setText(konvertujDatumIzPodataka(rs.getString("vazido")));
+					t[3].setText(rs.getString("zapbr"));
+					t[4].setText(rs.getString("opis"));
+					t[5].setText(rs.getString("predrash"));
+					t[6].setText(rs.getString("uzrok"));
+					t[7].setText(konvertujDatumIzPodataka(rs.getString("datrash")));
 					t[8].setText(rs.getString("napomena"));
 					izmena = true;
 					rs.close();
@@ -652,9 +696,9 @@ protected MaskFormatter createFormatter(String s, int koji) {
 
 		         ResultSet rs = statement.executeQuery( query );
 		         if(rs.next()){
-		         	txtNaziv.setText(rs.getString("nazmerila"));
-		         	txtSluzb.setText(rs.getString("oznaka"));
-					txtMerOps.setText(rs.getString("tip"));
+		         	txtNaziv.setText(rs.getString("nazmerila").trim());
+		         	txtSluzb.setText(rs.getString("oznaka").trim());
+					txtMerOps.setText(rs.getString("tip").trim());
 					rs.close();
 					TraziSledeciRedniBroj();
 				} else {
@@ -679,35 +723,43 @@ protected MaskFormatter createFormatter(String s, int koji) {
   }
 //----------------------------------------------------------------------------------------------------------------- 
 	private void TraziSledeciRedniBroj(){
-	  int redniBroj = 1;
-	  Statement statement = null;
+		int redniBroj = 1;
+		Statement statement = null;
+		 if ( !txtMernoSredstvo.getText().trim().equals( "" )) {
 
-			try {
-				statement = connection.createStatement();
+				try {
+					statement = connection.createStatement();
 
-				String query = "SELECT MAX(rbr) FROM atesti WHERE sifmas=" + txtMernoSredstvo.getText().trim();
+					String query = "SELECT MAX(rbr) FROM atesti WHERE sifmas=" + txtMernoSredstvo.getText().trim();
 
-		         ResultSet rs = statement.executeQuery( query );
-		         if(rs.next()){
-					redniBroj = rs.getInt("MAX(rbr)") + 1;
-					rs.close();
-				} 
+					 ResultSet rs = statement.executeQuery( query );
+					 if(rs.next()){
+						redniBroj = rs.getInt("MAX(rbr)") + 1;
+						rs.close();
+					} 
 
-				t[0].setText(String.valueOf(redniBroj));
-				String sql = "SELECT * from atesti WHERE sifmas=" + txtMernoSredstvo.getText().trim() + " ORDER BY rbr DESC";
-				popuniTabelu(sql);
+					String sql = "SELECT * from atesti WHERE sifmas=" + txtMernoSredstvo.getText().trim() + " ORDER BY rbr DESC";
+					popuniTabelu(sql);
+					t[0].setText(String.valueOf(redniBroj));
+					t[0].setSelectionStart(0);
+					t[0].requestFocus();
 
-			} catch ( SQLException sqlex ) {
-						JOptionPane.showMessageDialog(this, "Greska u FindRecord:" + sqlex);
-			}
-				finally{
-						if (statement != null){
-							try{
-								statement.close();
-								statement = null;
-							}catch (Exception e){
-								JOptionPane.showMessageDialog(null, "Nije uspeo da zatvori statement");}}
+				} catch ( SQLException sqlex ) {
+							JOptionPane.showMessageDialog(this, "Greska u FindRecord:" + sqlex);
 				}
+				finally{
+							if (statement != null){
+								try{
+									statement.close();
+									statement = null;
+								}catch (Exception e){
+									JOptionPane.showMessageDialog(null, "Nije uspeo da zatvori statement");}}
+				
+				}
+		 }else{
+			JOptionPane.showMessageDialog(this, "Morate uneti merno sredstvo");
+			txtMernoSredstvo.requestFocus();
+		 }
 	}
 //------------------------------------------------------------------------------------------------------------------
 	private void TraziRecord(){
@@ -744,8 +796,11 @@ protected MaskFormatter createFormatter(String s, int koji) {
 	   	qtbl.query(sql);
  	   	jtbl = new JTable( qtbl );
 		jtbl.addMouseListener(new ML());
-		
-	   	TableColumn tcol = jtbl.getColumnModel().getColumn(0);
+		jtbl.setFont(new Font("Arial",Font.PLAIN,ConnMySQL.tablefont));
+		JTableHeader header = jtbl.getTableHeader();
+        header.setFont(new Font("Arial", Font.PLAIN,ConnMySQL.tablefont));		
+	   	
+		TableColumn tcol = jtbl.getColumnModel().getColumn(0);
 	   	tcol.setPreferredWidth(50);
 	   	jspane = new JScrollPane( jtbl );
 	   	ptbl.add( jspane );
@@ -754,9 +809,50 @@ protected MaskFormatter createFormatter(String s, int koji) {
 //------------------------------------------------------------------------------------------------------------------
     public void prikaziIzTabele() {
 		int kojirec = jtbl.getSelectedRow();
-		koji = String.valueOf(podaci.get(kojirec));
+		koji = jtbl.getValueAt(kojirec,0).toString();
 		FindRecord();
 	}
+//--------------------------------------------------------------------------
+   public String konvertujDatum(String _datum){
+		String datum,pom;
+		pom = _datum;
+		datum = pom.substring(6,10);
+		datum = datum + "-" + pom.substring(3,5);
+		datum = datum + "-" + pom.substring(0,2);
+		return datum;
+   }
+//--------------------------------------------------------------------------
+   public String konvertujDatumIzPodataka(String _datum){
+		String datum,pom;
+		pom = _datum;
+		datum = pom.substring(8,10);
+		datum = datum + "/" + pom.substring(5,7);
+		datum = datum + "/" + pom.substring(0,4);
+		return datum;
+   }
+//--------------------------------------------------------------------------
+   public boolean proveriDatum(String _datum){
+		boolean ispravan = false;
+		SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+		java.util.Date testDate = null;
+		try
+		{
+			testDate = sdf.parse(_datum);
+		}
+		//provera da li je odgovarajuci format datuma
+		catch (ParseException e)
+		{
+			JOptionPane.showMessageDialog(this, "Neispravan format datuma");
+			return false;
+		}
+		//provera da li je datum ispravan
+		if (!sdf.format(testDate).equals(_datum))
+		{
+			JOptionPane.showMessageDialog(this, "Neispravan datum");
+			return false;
+		}
+		return true;
+   }
 //------------------------------------------------------------------------------------------------------------------
 	public void Akcija(JFormattedTextField e) {
 		JFormattedTextField source;
@@ -767,12 +863,30 @@ protected MaskFormatter createFormatter(String s, int koji) {
 					t[1].requestFocus();
 				}
 				else if (source == t[1]){
-					t[2].setSelectionStart(0);
-					t[2].requestFocus();
+					if (t[1].getText().trim().length()>7)
+					{
+						if (proveriDatum(t[1].getText().trim()))
+						{
+							t[2].setSelectionStart(0);
+							t[2].requestFocus();
+						}
+					}else{
+						t[1].setSelectionStart(0);
+						t[1].requestFocus();
+					}
 				}
 				else if (source == t[2]){
-					t[3].setSelectionStart(0);
-					t[3].requestFocus();
+					if (t[2].getText().trim().length()>7)
+					{
+						if (proveriDatum(t[2].getText().trim()))
+						{
+							t[3].setSelectionStart(0);
+							t[3].requestFocus();
+						}
+					}else{
+						t[2].setSelectionStart(0);
+						t[2].requestFocus();
+					}
 				}
 				else if (source == t[3]){
 					t[4].setSelectionStart(0);
@@ -791,8 +905,17 @@ protected MaskFormatter createFormatter(String s, int koji) {
 					t[7].requestFocus();
 				}
 				else if (source == t[7]){
-					t[8].setSelectionStart(0);
-					t[8].requestFocus();
+					if (t[7].getText().trim().length()>7)
+					{
+						if (proveriDatum(t[7].getText().trim()))
+						{
+							t[8].setSelectionStart(0);
+							t[8].requestFocus();
+						}
+					}else{
+						t[7].setSelectionStart(0);
+						t[7].requestFocus();
+					}
 				}
 				else if (source == t[8]){
 					if (izmena)
@@ -841,7 +964,7 @@ class ML extends MouseAdapter{
 //===========================================================================
  class mQTM4 extends AbstractTableModel {
 	Connection dbconn;
-	String[] colheads = {"\u0160ifra","Naziv mernog sredstva","Serv. datum","Vazi do","Zap.br.","Opis","Pred rash", "Uzrok","Napomena"};
+	String[] colheads = {"Red.br.","Serv. datum","Vazi do","Zap.br.","Opis","Pred rash", "Uzrok","Napomena"};
 
 //------------------------------------------------------------------------------------------------------------------
    public mQTM4(Connection dbc){
@@ -886,12 +1009,11 @@ class ML extends MouseAdapter{
             while ( rs.next() ) {
                String[] record = new String[8];
                record[0] = rs.getString("rbr");
-               record[1] = rs.getString("sifmas");
-               record[2] = rs.getString("servdatum");
-               record[3] = rs.getString("vazido");
-               record[4] = rs.getString("zapbr");
-               record[5] = rs.getString("opis");
-               record[6] = rs.getString("predrash");
+               record[1] = konvertujDatumIzPodatakaQTB(rs.getString("servdatum"));
+               record[2] = konvertujDatumIzPodatakaQTB(rs.getString("vazido"));
+               record[3] = rs.getString("zapbr");
+               record[4] = rs.getString("opis");
+               record[5] = rs.getString("predrash");
                record[6] = rs.getString("uzrok");
                record[7] = rs.getString("napomena");
                podaci.addElement(record[0]);

@@ -34,6 +34,7 @@ public class ConnMySQL
 	public static int bekapdane=0;
 	private static Properties prop = null;
 	public JPanel demo;
+	public static int lblfont=12,txtfont=12,titlefont=12,tablefont=12,butonfont=12;
 	
 	public ConnMySQL(){
 		procitajParametre();
@@ -98,7 +99,32 @@ public class ConnMySQL
 		}catch(Exception ee){
 			putanjabekap = "";
 		}
-	
+		try{
+			lblfont = Integer.parseInt(prop.getProperty("lblfont").trim());
+		}catch(Exception ee){
+			lblfont = 12;
+		}
+		try{
+			txtfont = Integer.parseInt(prop.getProperty("txtfont").trim());
+		}catch(Exception ee){
+			txtfont = 12;
+		}
+		try{
+			titlefont = Integer.parseInt(prop.getProperty("titlefont").trim());
+		}catch(Exception ee){
+			titlefont = 12;
+		}
+		try{
+			tablefont = Integer.parseInt(prop.getProperty("tablefont").trim());
+		}catch(Exception ee){
+			tablefont = 12;
+		}
+		try{
+			butonfont = Integer.parseInt(prop.getProperty("butonfont").trim());
+		}catch(Exception ee){
+			butonfont = 12;
+		}
+
 	}
 //-----------------------------------------------------------	
 	public void close()

@@ -32,7 +32,7 @@ public class AutoFrame extends JFrame {
     JInternalFrame toolPalette;
     JCheckBoxMenuItem showToolPaletteMenuItem;
     //public ConnMySQL connection;     
-	public static Font veciFont = new Font("Arial", Font.PLAIN, 18); // Primer sa vecim fontom
+	public static Font veciFont = new Font("Arial", Font.PLAIN, ConnMySQL.titlefont); // Primer sa vecim fontom
     static final Integer DOCLAYER = new Integer(5);
     static final Integer TOOLLAYER = new Integer(6);
     static final Integer HELPLAYER = new Integer(7);
@@ -53,7 +53,8 @@ public class AutoFrame extends JFrame {
 		
 		UIManager.put("MenuItem.font", veciFont);
 		UIManager.put("Menu.font", veciFont); // Opcionalno i za JMenu
-		// A�uriranje UI nakon promene
+		UIManager.put("InternalFrame.titleFont", new Font("Arial", Font.PLAIN, ConnMySQL.titlefont));
+		// A?uriranje UI nakon promene
 		SwingUtilities.updateComponentTreeUI(this);
 		
 		classbekap = new classBekap(aLogin.konekcija);

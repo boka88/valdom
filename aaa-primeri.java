@@ -21,6 +21,25 @@ Color c = new Color(110,218,253);
 		}
 		p.setBackground(c);
 =============================================================================
+SETOVANJE FONTA U TABELI IZ valdom.properties parametara tablefont
+		jtbl.setFont(new Font("Arial",Font.PLAIN,ConnMySQL.tablefont));
+		JTableHeader header = jtbl.getTableHeader();
+        header.setFont(new Font("Arial", Font.PLAIN,ConnMySQL.tablefont));
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 znak & i " u nazivima su nepozeljni ali ako mora onda se u XML
 fajlu i ostalim tekstualnim fajlovima mora zameniti sa:
 &   npr.   B&B     B&amp;B

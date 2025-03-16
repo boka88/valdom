@@ -55,17 +55,18 @@ public class fMerila extends JInternalFrame implements InternalFrameListener
 
 		JPanel container = new JPanel();
 		container.setLayout( null );
-		container.setBounds(5,5,360,350);
+		container.setBounds(5,5,360,450);
 
 		JPanel dugmad = new JPanel();
 		dugmad.setLayout ( new FlowLayout(FlowLayout.LEFT) );
-		dugmad.setBounds(5,320,360,40);
+		dugmad.setBounds(5,410,360,40);
 
 		JPanel buttonPanel = new JPanel();
 		buttonPanel.setLayout ( new FlowLayout(FlowLayout.LEFT) );
 
 		unesi = new JButton("Unesi");
 		unesi.setMnemonic('U');
+		unesi.setFont(new Font("Arial",Font.PLAIN,ConnMySQL.butonfont));
         unesi.getInputMap().put(KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0),"check");
         unesi.getActionMap().put("check", new AbstractAction() {
             public void actionPerformed(ActionEvent e) {UnesiPressed();}});
@@ -76,6 +77,7 @@ public class fMerila extends JInternalFrame implements InternalFrameListener
 
 		novi = new JButton("Novi slog");
 		novi.setMnemonic('N');
+		novi.setFont(new Font("Arial",Font.PLAIN,ConnMySQL.butonfont));
 		novi.addActionListener(new ActionListener() {
 	               public void actionPerformed(ActionEvent e) {
 				   NoviPressed(); }});
@@ -83,6 +85,7 @@ public class fMerila extends JInternalFrame implements InternalFrameListener
 
 		izmeni = new JButton("Izmeni");
 		izmeni.setMnemonic('I');
+		izmeni.setFont(new Font("Arial",Font.PLAIN,ConnMySQL.butonfont));
         izmeni.getInputMap().put(KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0),"check");
         izmeni.getActionMap().put("check", new AbstractAction() {
             public void actionPerformed(ActionEvent e) {UpdateRecord();}});
@@ -93,54 +96,41 @@ public class fMerila extends JInternalFrame implements InternalFrameListener
 
 		brisi = new JButton("Bri\u0161i slog");
 		brisi.setMnemonic('B');
+		brisi.setFont(new Font("Arial",Font.PLAIN,ConnMySQL.butonfont));
 		brisi.addActionListener(new ActionListener() {
 	               public void actionPerformed(ActionEvent e) {
 				   DeleteRecord(); }});
 		dugmad.add( brisi );
 
-		JButton trazi = new JButton("Tra\u017ei");
+		JButton trazi = new JButton("Tra\u017ei po nazivu");
 		trazi.setMnemonic('T');
+		trazi.setFont(new Font("Arial",Font.PLAIN,ConnMySQL.butonfont));
 		trazi.addActionListener(new ActionListener() {
 	               public void actionPerformed(ActionEvent e) {
 				   TraziRecord(); }});
 		buttonPanel.add( trazi );
 
-		JButton trazipomestu = new JButton("Tra\u017ei po mestu");
+		/*
+		JButton trazipomestu = new JButton("Tra\u017ei po nazivu");
 		trazipomestu.setMnemonic('M');
 		trazipomestu.addActionListener(new ActionListener() {
 	               public void actionPerformed(ActionEvent e) {
 				   TraziRecordPoMestu(); }});
 		buttonPanel.add( trazipomestu );
+		*/
 
-		JButton stampasve = new JButton("\u0160tampa sve");
+		JButton stampasve = new JButton("\u0160tampa spisak");
 		stampasve.setMnemonic('P');
+		stampasve.setFont(new Font("Arial",Font.PLAIN,ConnMySQL.butonfont));
 		stampasve.addActionListener(new ActionListener() {
 	               public void actionPerformed(ActionEvent e) {
-				   Stampa(1); }});
+				   Stampa(); }});
 		buttonPanel.add( stampasve );
-
-		JButton stampa = new JButton("\u0160tampa aktivne");
-		stampa.setMnemonic('A');
-		stampa.addActionListener(new ActionListener() {
-	               public void actionPerformed(ActionEvent e) {
-				   Stampa(2); }});
-		//buttonPanel.add( stampa );
-
-		JButton stampakup = new JButton("\u0160tampa kupce");
-		stampakup.addActionListener(new ActionListener() {
-	               public void actionPerformed(ActionEvent e) {
-				   Stampakupdob(1); }});
-		//buttonPanel.add( stampakup );
-
-		JButton stampadob = new JButton("\u0160tampa dob.");
-		stampadob.addActionListener(new ActionListener() {
-	               public void actionPerformed(ActionEvent e) {
-				   Stampakupdob(2); }});
-		//buttonPanel.add( stampadob );
 
 
 		JButton izlaz = new JButton("Izlaz");
 		izlaz.setMnemonic('Z');
+		izlaz.setFont(new Font("Arial",Font.PLAIN,ConnMySQL.butonfont));
 		izlaz.addActionListener(new ActionListener() {
 	               public void actionPerformed(ActionEvent e) {
 				   Izlaz(); }});
@@ -157,7 +147,7 @@ public class fMerila extends JInternalFrame implements InternalFrameListener
 		main.add(buttonPanel, BorderLayout.SOUTH);
 		getContentPane().add(main);
 		pack();
-		setSize(790,450);
+		setSize(790,550);
 		centerDialog();
 		UIManager.addPropertyChangeListener(new UISwitchListener(main));
 
@@ -191,10 +181,10 @@ public class fMerila extends JInternalFrame implements InternalFrameListener
 		JPanel p = new JPanel();
 		p.setLayout( new CL22() );
 		p.setBorder( new TitledBorder("Unos") );
-		p.setBounds(5,5,350,310);
+		p.setBounds(5,5,370,380);
 
 		int i;
-        n_fields = 12; 
+        n_fields = 13; 
         t = new FormField[n_fields]; 
         l = new JLabel[n_fields]; 
 		
@@ -253,7 +243,7 @@ public class fMerila extends JInternalFrame implements InternalFrameListener
 		fmm = "******************";
         l[6] = new JLabel("Proizvodja\u010d");
         t[6] = new FormField(createFormatter(fmm,3));
-		t[6].setColumns(15);
+		t[6].setColumns(18);
         t[6].getInputMap().put(KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0),"check");
         t[6].getActionMap().put("check", new AbstractAction() {
             public void actionPerformed(ActionEvent e) {Akcija(t[6]);}});
@@ -284,27 +274,37 @@ public class fMerila extends JInternalFrame implements InternalFrameListener
         t[9].getActionMap().put("check", new AbstractAction() {
             public void actionPerformed(ActionEvent e) {Akcija(t[9]);}});
 
-		fmm = "**************************************************";
-        l[10] = new JLabel( "Napomena:");
-        t[10] = new FormField(createFormatter(fmm,3));
-		t[10].setColumns(18);
+		fmm = "****";
+        l[10] = new JLabel( "God. nabavke:");
+        t[10] = new FormField(createFormatter(fmm,1));
+		t[10].setColumns(5);
         t[10].getInputMap().put(KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0),"check");
         t[10].getActionMap().put("check", new AbstractAction() {
             public void actionPerformed(ActionEvent e) {Akcija(t[10]);}});
 
-		//ne koristi se 
-		fmm = "***";
-        l[11] = new JLabel("Valuta dana :");
-        t[11] = new FormField(createFormatter(fmm,1));
-		t[11].setColumns(3);
+		fmm = "##/##/####";
+        l[11] = new JLabel("Dat.prvog preg. :");
+        t[11] = new FormField(createFormatter(fmm,4));
+		t[11].setColumns(10);
         t[11].getInputMap().put(KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0),"check");
         t[11].getActionMap().put("check", new AbstractAction() {
             public void actionPerformed(ActionEvent e) {Akcija(t[11]);}});
+		
+		fmm = "**************************************************";
+        l[12] = new JLabel("Napomena :");
+        t[12] = new FormField(createFormatter(fmm,3));
+		t[12].setColumns(18);
+        t[12].getInputMap().put(KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0),"check");
+        t[12].getActionMap().put("check", new AbstractAction() {
+            public void actionPerformed(ActionEvent e) {Akcija(t[12]);}});
 
 
-	    for(i=0;i<11;i++){ 
+	    for(i=0;i<13;i++){ 
+			l[i].setFont(new Font("Arial",Font.PLAIN,ConnMySQL.lblfont));
+			t[i].setFont(new Font("Arial",Font.PLAIN,ConnMySQL.txtfont));
             p.add(l[i]); 
-            p.add(t[i]); }
+            p.add(t[i]); 
+		}
 
 		return p;
     }
@@ -352,7 +352,7 @@ protected MaskFormatter createFormatter(String s, int koji) {
 //------------------------------------------------------------------------------------------------------------------
     public void NoviPressed() {
         int i;
-        for(i=0;i<11;i++){
+        for(i=0;i<13;i++){
             t[i].setText("");
             t[i].setValue(null);
 		}
@@ -370,10 +370,8 @@ protected MaskFormatter createFormatter(String s, int koji) {
 		AddRecord();
     }
 //------------------------------------------------------------------------------------------------------------------
-    public void Stampa(int _koji) {
-		String sql = "SELECT * FROM saradnici";
-		//jPrintSifarnik kk1 = new jPrintSifarnik(connection,2,sql,"");
-		//fPrintSarad kkl = new fPrintSarad(connection,_koji);
+    public void Stampa() {
+			jPrintSpisakMKS kk1 = new jPrintSpisakMKS(connection);
 	}
 //------------------------------------------------------------------------------------------------------------------
     public void Stampakupdob(int _koji) {
@@ -420,7 +418,7 @@ protected MaskFormatter createFormatter(String s, int koji) {
 		 if ( t[0].getText().trim().length() != 0 && 
             t[1].getText().trim().length() != 0 ) {
             String query = "INSERT INTO mernasredstva (rbr,nazmerila,oznaka,grupmer,merops," +
-				"klastac,proiz,tip,serija,peratest,napomena) VALUES(" +
+				"klastac,proiz,tip,serija,peratest,datumnabavke,prvipregled,napomena) VALUES(" +
 				Integer.parseInt(t[0].getText().trim()) + ",'" +
 				t[1].getText() + "','" +
 				t[2].getText() + "','" +
@@ -431,7 +429,9 @@ protected MaskFormatter createFormatter(String s, int koji) {
 				t[7].getText().trim() + "','" + 
 				t[8].getText().trim() + "','" + 
 				t[9].getText() + "','" +
-				t[10].getText() + "')"; 
+				t[10].getText() + "','" +
+				konvertujDatum(t[11].getText()) + "','" +
+				t[12].getText() + "')"; 
 			
 			int result = statement.executeUpdate( query );
 
@@ -482,7 +482,9 @@ protected MaskFormatter createFormatter(String s, int koji) {
 				",tip='" + t[7].getText() + "'" +
 				",serija='" + t[8].getText() + "'" +
 				",peratest='" + t[9].getText() + "'" +
-				",napomena='" + t[10].getText().toUpperCase() + "'" +
+				",datumnabavke='" + t[10].getText() + "'" +
+				",prvipregled='" + konvertujDatum(t[11].getText()) + "'" +
+				",napomena='" + t[12].getText().toUpperCase() + "'" +
 				" WHERE rbr=" + Integer.parseInt(t[0].getText().trim());
 
 			   int result = statement.executeUpdate( query );
@@ -566,16 +568,18 @@ protected MaskFormatter createFormatter(String s, int koji) {
 		         if(rs.next()){
 
 		         	t[0].setText(String.valueOf(rs.getInt("rbr")));
-		         	t[1].setText(rs.getString("nazmerila"));
-		         	t[2].setText(rs.getString("oznaka"));
-		         	t[3].setText(rs.getString("grupmer"));
-		         	t[4].setText(rs.getString("merops"));
-					t[5].setText(rs.getString("klastac"));
-					t[6].setText(rs.getString("proiz"));
-					t[7].setText(rs.getString("tip"));
-					t[8].setText(rs.getString("serija"));
-					t[9].setText(rs.getString("peratest"));
-					t[10].setText(rs.getString("napomena"));
+		         	t[1].setText(rs.getString("nazmerila").trim());
+		         	t[2].setText(rs.getString("oznaka").trim());
+		         	t[3].setText(rs.getString("grupmer").trim());
+		         	t[4].setText(rs.getString("merops").trim());
+					t[5].setText(rs.getString("klastac").trim());
+					t[6].setText(rs.getString("proiz").trim());
+					t[7].setText(rs.getString("tip").trim());
+					t[8].setText(rs.getString("serija").trim());
+					t[9].setText(rs.getString("peratest").trim());
+					t[10].setText(rs.getString("datumnabavke").trim());
+					t[11].setText(konvertujDatumIzPodataka(rs.getString("prvipregled")));
+					t[12].setText(rs.getString("napomena").trim());
 	         		rs.close();
 					izmena = true;				
 				}
@@ -605,7 +609,7 @@ protected MaskFormatter createFormatter(String s, int koji) {
   }
 //------------------------------------------------------------------------------------------------------------------
 	private void TraziRecord(){
-        String result = JOptionPane.showInputDialog(this, "Unesi naziv ili deo naziva saradnika");
+        String result = JOptionPane.showInputDialog(this, "Unesi naziv ili deo naziva");
 		String upit = "SELECT * FROM mernasredstva WHERE nazmerila LIKE '%" + String.valueOf(result) + "%'";
 		popuniTabelu(upit);
 		jtbl.requestFocus();
@@ -640,7 +644,7 @@ protected MaskFormatter createFormatter(String s, int koji) {
 		JPanel ptbl = new JPanel();
 	   	ptbl.setLayout( new GridLayout(1,1) );
 		ptbl.setBorder( new TitledBorder("Podaci") );
-		ptbl.setBounds(380,5,380,350);
+		ptbl.setBounds(380,5,380,360);
 
 	   	qtbl = new QTM2(connection);
 		String sql;
@@ -655,6 +659,10 @@ protected MaskFormatter createFormatter(String s, int koji) {
 		jtbl.setAlignmentX(JTable.RIGHT_ALIGNMENT); 
 		jtbl.setAutoResizeMode(JTable.AUTO_RESIZE_OFF); 
 		jtbl.addMouseListener(new ML());
+		jtbl.setFont(new Font("Arial",Font.PLAIN,ConnMySQL.tablefont));
+		JTableHeader header = jtbl.getTableHeader();
+        header.setFont(new Font("Arial", Font.PLAIN,ConnMySQL.tablefont));
+
 		
 	   	TableColumn tcol = jtbl.getColumnModel().getColumn(0);
 	   	tcol.setPreferredWidth(60);
@@ -689,6 +697,47 @@ protected MaskFormatter createFormatter(String s, int koji) {
 				JOptionPane.showMessageDialog(null, "Nije uspeo da zatvori statement");}}
 	  }
   }
+//--------------------------------------------------------------------------
+   public String konvertujDatum(String _datum){
+		String datum,pom;
+		pom = _datum;
+		datum = pom.substring(6,10);
+		datum = datum + "-" + pom.substring(3,5);
+		datum = datum + "-" + pom.substring(0,2);
+		return datum;
+   }
+//--------------------------------------------------------------------------
+   public String konvertujDatumIzPodataka(String _datum){
+		String datum,pom;
+		pom = _datum;
+		datum = pom.substring(8,10);
+		datum = datum + "/" + pom.substring(5,7);
+		datum = datum + "/" + pom.substring(0,4);
+		return datum;
+   }
+//--------------------------------------------------------------------------
+   public boolean proveriDatum(String _datum){
+		boolean ispravan = false;
+		SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+		java.util.Date testDate = null;
+		try
+		{
+			testDate = sdf.parse(_datum);
+		}
+		//provera da li je odgovarajuci format datuma
+		catch (ParseException e)
+		{
+			JOptionPane.showMessageDialog(this, "Neispravan format datuma");
+			return false;
+		}
+		//provera da li je datum ispravan
+		if (!sdf.format(testDate).equals(_datum))
+		{
+			JOptionPane.showMessageDialog(this, "Neispravan datum");
+			return false;
+		}
+		return true;
+   }
 //------------------------------------------------------------------------------------------------------------------
 	public void Akcija(FormField e) {
 		FormField source;
@@ -744,6 +793,24 @@ protected MaskFormatter createFormatter(String s, int koji) {
 				else if (source == t[10]){
 					if (t[10].getText().trim().length() == 0){
 						t[10].setText(" ");
+					}
+					t[11].setSelectionStart(0);
+					t[11].requestFocus();
+				}
+				else if (source == t[11]){
+					if (t[11].getText().trim().length() == 0){
+						t[11].requestFocus();
+					}else{
+						if (proveriDatum(t[11].getText().trim()))
+						{
+							t[12].setSelectionStart(0);
+							t[12].requestFocus();
+						}
+					}
+				}
+				else if (source == t[12]){
+					if (t[12].getText().trim().length() == 0){
+						t[12].setText(" ");
 					}
 					if (izmena)
 					{

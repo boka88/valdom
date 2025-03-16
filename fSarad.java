@@ -191,7 +191,7 @@ public class fSarad extends JInternalFrame implements InternalFrameListener
 		JPanel p = new JPanel();
 		p.setLayout( new CL2() );
 		p.setBorder( new TitledBorder("Unos") );
-		p.setBounds(5,5,350,310);
+		p.setBounds(5,5,350,510);
 
 		int i;
         n_fields = 12; 
